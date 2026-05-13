@@ -1,0 +1,10 @@
+# modern cli
+alias ls="eza"
+alias ll="eza -la"
+alias tree="eza --tree"
+alias cat="bat"
+
+# AI CLI
+alias c="claude"
+alias cx="codex"
+alias g="gemini"

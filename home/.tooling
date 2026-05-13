@@ -1,0 +1,10 @@
+# llms.txt docs CLI helpers (docs / add-doc / refresh-docs)
+[[ -f "$HOME/ops/docs/docs-fns.zsh" ]] && source "$HOME/ops/docs/docs-fns.zsh"
+
+# zoxide
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
+
+# bun completions
+[ -s "/private/var/folders/th/b4c841yj4vsfd0cp40pwkbnd_1cjj0/T/bun-1.3.13-install.SeNv6V/_bun" ] && source "/private/var/folders/th/b4c841yj4vsfd0cp40pwkbnd_1cjj0/T/bun-1.3.13-install.SeNv6V/_bun"
+
+[[ -o interactive && -t 0 && -f "$HOME/.fzf.zsh" ]] && source "$HOME/.fzf.zsh"

@@ -1,0 +1,11 @@
+# Gemini API key from 1Password, injected only when Gemini is invoked.
+_load_gemini_key() {
+  if [ -z "${GEMINI_API_KEY:-}" ] && command -v op >/dev/null 2>&1; then
+    export GEMINI_API_KEY=$(op item get tphgr6jmx4xwzdiliosyf53kzq --fields label=password --reveal 2>/dev/null || true)
+  fi
+}
+
+gemini() {
+  _load_gemini_key
+  command gemini -y "$@"
+}

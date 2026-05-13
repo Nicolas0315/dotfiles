@@ -1,0 +1,36 @@
+# PATH setup and legacy startup sources that affect command resolution.
+[ -f "$HOME/.zshrc_local_minimal" ] && source "$HOME/.zshrc_local_minimal"
+[ -f "$HOME/.local-llm.zsh" ] && source "$HOME/.local-llm.zsh"
+[ -f "$HOME/.zshrc_ai_clis" ] && source "$HOME/.zshrc_ai_clis"
+
+[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
+
+[ -f "$HOME/.zshrc_claude_devices" ] && source "$HOME/.zshrc_claude_devices"
+
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# Keep nvm-managed Node/Codex ahead of older runtime fallbacks.
+if [ -d "$HOME/.nvm/versions/node/v22.22.2/bin" ]; then
+  case ":$PATH:" in
+    *":$HOME/.nvm/versions/node/v22.22.2/bin:"*) ;;
+    *) export PATH="$HOME/.nvm/versions/node/v22.22.2/bin:$PATH" ;;
+  esac
+fi
+
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Added by APM runtime setup. Keep as fallback so nvm-managed AI CLIs win.
+case ":$PATH:" in
+  *":$HOME/.apm/runtimes:"*) ;;
+  *) export PATH="$PATH:$HOME/.apm/runtimes" ;;
+esac
+
+# browser-use profile-use binary
+export PATH="$HOME/.browser-use/bin:$PATH"
+
+# opencode
+export PATH="$HOME/.opencode/bin:$PATH"
+
+# Deduplicate PATH entries while preserving the first occurrence.
+typeset -U path PATH

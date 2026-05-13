@@ -1,0 +1,51 @@
+# =========================================================
+# Ghostty
+# =========================================================
+
+font-family = "UDEV Gothic"
+font-size = 14
+
+cursor-style = block
+
+macos-titlebar-style = transparent
+macos-window-shadow = true
+
+copy-on-select = true
+
+window-inherit-working-directory = true
+
+working-directory = /Users/s30519/work
+
+
+# =========================================================
+# Environment
+# =========================================================
+
+env = EDITOR=nvim
+env = VISUAL=nvim
+env = SHELL=/bin/zsh
+
+
+# =========================================================
+# Zellij-first keybinds
+# =========================================================
+
+# New panes
+keybind = cmd+enter=text:zellij\ action\ new-pane\ down\r
+keybind = cmd+shift+enter=text:zellij\ action\ new-pane\ right\r
+
+# Move focus
+keybind = cmd+left=text:zellij\ action\ move-focus\ left\r
+keybind = cmd+right=text:zellij\ action\ move-focus\ right\r
+keybind = cmd+up=text:zellij\ action\ move-focus\ up\r
+keybind = cmd+down=text:zellij\ action\ move-focus\ down\r
+
+# Resize
+keybind = cmd+shift+left=text:zellij\ action\ resize\ increase\ left\r
+keybind = cmd+shift+right=text:zellij\ action\ resize\ increase\ right\r
+
+# Close pane
+keybind = cmd+w=text:zellij\ action\ close-pane\r
+
+# Session launcher
+keybind = cmd+g=text:zellij\ attach\ -c\ main\r

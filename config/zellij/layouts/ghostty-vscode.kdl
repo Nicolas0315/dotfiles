@@ -1,0 +1,14 @@
+layout {
+  pane split_direction="vertical" {
+    pane split_direction="horizontal" {
+      pane {
+        command "ft"
+      }
+      pane
+    }
+    pane split_direction="horizontal" {
+      pane
+      pane
+    }
+  }
+}

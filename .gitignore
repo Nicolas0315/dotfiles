@@ -1,0 +1,10 @@
+.DS_Store
+*.local
+*.secret
+*.tmp
+*.bak
+.env
+.env.*
+Brewfile.lock.json
+secrets/
+tmp/
