@@ -71,6 +71,12 @@ Scan for raw secret-like values:
 Ghostty validation uses `ghostty` from `PATH` when available, otherwise it falls
 back to `/Applications/Ghostty.app/Contents/MacOS/ghostty`.
 
+Review AI-agent tool candidates:
+
+```sh
+less research/ai-agent-tools.md
+```
+
 Apply repo files back to the live home directory:
 
 ```sh
