@@ -34,10 +34,20 @@ Include a Homebrew package snapshot:
 ./scripts/snapshot.sh --with-brew
 ```
 
-Check whether the Brewfile is currently satisfied without installing anything:
+Check whether the Brewfile is currently satisfied without installing anything,
+using the workstation `--no-upgrade` gate:
 
 ```sh
 ./scripts/brew-check.sh
+```
+
+`brew-check.sh` disables Homebrew auto-update by default so this check does not
+refresh tap metadata just to report drift.
+
+To also fail on outdated formulae and casks:
+
+```sh
+./scripts/brew-check.sh --strict
 ```
 
 Compare repo files with live files:
@@ -99,9 +109,11 @@ secret value.
 
 These are intentionally not applied by `validate.sh`.
 
-- `./scripts/brew-check.sh` is read-only. If it fails, decide whether to run
-  `brew bundle install --file ~/dotfiles/brew/Brewfile` as a separate apply
-  gate.
+- `./scripts/brew-check.sh` is read-only and uses `--no-upgrade` by default.
+  If it fails, decide whether to run
+  `HOMEBREW_NO_AUTO_UPDATE=1 brew bundle install --file ~/dotfiles/brew/Brewfile --no-upgrade`
+  as a separate apply gate.
+- `./scripts/brew-check.sh --strict` additionally reports outdated packages.
 - `direnv` is already part of the Homebrew snapshot.
 - `mise`, `starship`, `neovim`, and `atuin` are future opt-in gates, not
   required for the current workstation baseline.
