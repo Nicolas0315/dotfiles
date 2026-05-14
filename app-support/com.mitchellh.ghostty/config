@@ -48,4 +48,4 @@ keybind = cmd+shift+right=text:zellij\ action\ resize\ increase\ right\r
 keybind = cmd+w=text:zellij\ action\ close-pane\r
 
 # Session launcher
-keybind = cmd+g=text:zellij\ attach\ -c\ main\r
+keybind = cmd+g=text:zellij\ --layout\ ghostty-vscode\ --session\ ghostty-vscode\r
