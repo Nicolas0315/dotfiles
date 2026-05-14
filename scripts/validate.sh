@@ -22,6 +22,27 @@ zsh -lic 'which -a node npm codex claude gemini; codex --version; claude --versi
   | sed '/^Restored session:/d;/^Saving session/d;/^\.\.\./d'
 printf '\n'
 
+printf '## zellij validation\n'
+zellij_check="$(mktemp)"
+zellij_layout="$(mktemp)"
+if zsh -lic 'command -v zellij; zellij --version; command -v ft; printf "EDITOR=%s\nVISUAL=%s\n" "${EDITOR:-}" "${VISUAL:-}"; zellij setup --check' >"$zellij_check" 2>&1 \
+  && zellij setup --dump-layout ghostty-vscode >"$zellij_layout" 2>&1; then
+  if rg -q '\[DEFAULT EDITOR\]: Not set' "$zellij_check"; then
+    tr -d '\000' < "$zellij_check" >&2
+    rm -f "$zellij_check" "$zellij_layout"
+    exit 1
+  fi
+  sed '/^Restored session:/d;/^Saving session/d;/^\.\.\./d' "$zellij_check" | sed -n '1,8p'
+  printf 'ok: zellij layout ghostty-vscode\n'
+else
+  tr -d '\000' < "$zellij_check" >&2
+  tr -d '\000' < "$zellij_layout" >&2
+  rm -f "$zellij_check" "$zellij_layout"
+  exit 1
+fi
+rm -f "$zellij_check" "$zellij_layout"
+printf '\n'
+
 printf '## live startup time\n'
 /usr/bin/time -p zsh -i -c exit 2>&1 \
   | sed '/^Restored session:/d;/^Saving session/d;/^\.\.\./d' \

@@ -86,3 +86,5 @@ secret value.
 - `typeset -U path PATH` deduplicates PATH while preserving first occurrence.
 - Ghostty should render the terminal; zellij should own local pane layout.
 - tmux remains available for persistence and remote work.
+- `EDITOR` and `VISUAL` default to `vim` because `nvim` is not installed on
+  this host.

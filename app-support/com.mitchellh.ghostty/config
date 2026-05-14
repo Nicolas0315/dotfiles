@@ -21,8 +21,8 @@ working-directory = /Users/s30519/work
 # Environment
 # =========================================================
 
-env = EDITOR=nvim
-env = VISUAL=nvim
+env = EDITOR=vim
+env = VISUAL=vim
 env = SHELL=/bin/zsh
 
 
