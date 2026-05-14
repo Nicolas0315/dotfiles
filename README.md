@@ -84,7 +84,24 @@ secret value.
 - nvm Node v22 is the preferred Node/npm/AI CLI provider.
 - APM runtime remains a fallback only.
 - `typeset -U path PATH` deduplicates PATH while preserving first occurrence.
+- Aliases live in `~/.aliases`; do not append duplicate aliases directly to
+  `~/.zshrc`.
+- `zoxide` state is machine-local and learned over time. An empty or sparse
+  zoxide database is not a dotfiles failure.
+- zsh bracketed paste should be bound. If a terminal ever gets stuck emitting
+  raw paste markers, run `printf '\e[?2004l'` in that terminal.
 - Ghostty should render the terminal; zellij should own local pane layout.
 - tmux remains available for persistence and remote work.
 - `EDITOR` and `VISUAL` default to `vim` because `nvim` is not installed on
   this host.
+
+## Installation Gates
+
+These are intentionally not applied by `validate.sh`.
+
+- `./scripts/brew-check.sh` is read-only. If it fails, decide whether to run
+  `brew bundle install --file ~/dotfiles/brew/Brewfile` as a separate apply
+  gate.
+- `direnv` is already part of the Homebrew snapshot.
+- `mise`, `starship`, `neovim`, and `atuin` are future opt-in gates, not
+  required for the current workstation baseline.

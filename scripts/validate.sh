@@ -4,7 +4,7 @@ set -euo pipefail
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 printf '## script syntax\n'
-bash -n "$repo_dir/scripts/snapshot.sh" "$repo_dir/scripts/diff-live.sh" "$repo_dir/scripts/apply.sh" "$repo_dir/scripts/validate.sh"
+bash -n "$repo_dir"/scripts/*.sh
 printf 'ok: bash scripts\n\n'
 
 printf '## zsh syntax\n'
@@ -20,6 +20,16 @@ printf 'ok: zsh fragments\n\n'
 printf '## live command resolution\n'
 zsh -lic 'which -a node npm codex claude gemini; codex --version; claude --version; gemini --version' 2>&1 \
   | sed '/^Restored session:/d;/^Saving session/d;/^\.\.\./d'
+printf '\n'
+
+printf '## shell ergonomics\n'
+zsh -lic '
+  alias ls ll tree cat c cx g
+  command -v zoxide
+  zoxide query -l 2>/dev/null | sed -n "1,5p"
+  bindkey | grep -q bracketed-paste
+  printf "ok: bracketed paste binding\n"
+' 2>&1 | sed '/^Restored session:/d;/^Saving session/d;/^\.\.\./d'
 printf '\n'
 
 printf '## zellij validation\n'
