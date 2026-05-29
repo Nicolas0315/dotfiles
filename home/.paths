@@ -3,34 +3,43 @@
 [ -f "$HOME/.local-llm.zsh" ] && source "$HOME/.local-llm.zsh"
 [ -f "$HOME/.zshrc_ai_clis" ] && source "$HOME/.zshrc_ai_clis"
 
+_path_prepend() {
+  [ -d "$1" ] || return
+  export PATH="$1:$PATH"
+}
+
+_path_append() {
+  [ -d "$1" ] || return
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) export PATH="$PATH:$1" ;;
+  esac
+}
+
 [ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 
 [ -f "$HOME/.zshrc_claude_devices" ] && source "$HOME/.zshrc_claude_devices"
 
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
-
 # Keep nvm-managed Node/Codex ahead of older runtime fallbacks.
-if [ -d "$HOME/.nvm/versions/node/v22.22.2/bin" ]; then
-  case ":$PATH:" in
-    *":$HOME/.nvm/versions/node/v22.22.2/bin:"*) ;;
-    *) export PATH="$HOME/.nvm/versions/node/v22.22.2/bin:$PATH" ;;
-  esac
-fi
+_path_prepend "$HOME/.nvm/versions/node/v22.22.2/bin"
 
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+_path_prepend "$BUN_INSTALL/bin"
 
 # Added by APM runtime setup. Keep as fallback so nvm-managed AI CLIs win.
-case ":$PATH:" in
-  *":$HOME/.apm/runtimes:"*) ;;
-  *) export PATH="$PATH:$HOME/.apm/runtimes" ;;
-esac
+_path_append "$HOME/.apm/runtimes"
 
 # browser-use profile-use binary
-export PATH="$HOME/.browser-use/bin:$PATH"
+_path_prepend "$HOME/.browser-use/bin"
 
 # opencode
-export PATH="$HOME/.opencode/bin:$PATH"
+_path_prepend "$HOME/.opencode/bin"
+
+# macOS app CLIs used by VS Code, Ghostty, and cmux workflows.
+_path_prepend "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+_path_prepend "/Applications/Ghostty.app/Contents/MacOS"
+_path_prepend "/Applications/cmux.app/Contents/MacOS"
 
 # Deduplicate PATH entries while preserving the first occurrence.
 typeset -U path PATH
+unfunction _path_prepend _path_append 2>/dev/null || true

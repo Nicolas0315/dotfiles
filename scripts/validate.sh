@@ -43,6 +43,11 @@ if zsh -lic 'command -v zellij; zellij --version; command -v ft; printf "EDITOR=
     exit 1
   fi
   sed '/^Restored session:/d;/^Saving session/d;/^\.\.\./d' "$zellij_check" | sed -n '1,8p'
+  if rg -n 'zellij\\ action\\ new-pane\\ (down|right|up|left)\\r' "$repo_dir/config/ghostty/config" "$repo_dir/app-support/com.mitchellh.ghostty/config"; then
+    printf 'invalid zellij new-pane keybind: use --direction\n' >&2
+    rm -f "$zellij_check" "$zellij_layout"
+    exit 1
+  fi
   printf 'ok: zellij layout ghostty-vscode\n'
 else
   tr -d '\000' < "$zellij_check" >&2

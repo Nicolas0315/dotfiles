@@ -62,6 +62,12 @@ Validate repo syntax and the current live shell:
 ./scripts/validate.sh
 ```
 
+Run the portable CI gate:
+
+```sh
+./scripts/verify.sh
+```
+
 Scan for raw secret-like values:
 
 ```sh
@@ -85,6 +91,8 @@ Apply repo files back to the live home directory:
 
 `apply.sh` is dry-run by default. With `--apply`, it copies the current live
 files to `~/.dotfiles-apply-backups/<timestamp>/` before replacing anything.
+It keeps the newest 10 backup sets by default and prunes older sets in the same
+run. Override the count with `--keep-backups <N>` or `DOTFILES_BACKUP_KEEP=<N>`.
 
 ## Secret Handling
 

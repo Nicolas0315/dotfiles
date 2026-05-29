@@ -1,63 +1,68 @@
-# Ghostty Configuration
+# =========================================================
+# Ghostty
+# =========================================================
 
-# Font Settings
-font-family = JetBrainsMono Nerd Font
-font-size = 13
-
-# Font Features
+font-family = "UDEV Gothic"
+font-size = 14
 font-feature = -calt
 font-feature = -liga
-
-# Theme
 theme = dark:Catppuccin Mocha,light:Catppuccin Latte
 
-# Window Settings
 window-padding-x = 8
 window-padding-y = 8
 window-padding-balance = true
 
-# Cursor
 cursor-style = block
 cursor-style-blink = true
 
-# Shell Integration
 shell-integration = detect
-shell-integration-features = cursor,sudo,title
+shell-integration-features = cursor,sudo,title,ssh-env
+notify-on-command-finish = unfocused
 
-# Clipboard Settings
 clipboard-read = allow
 clipboard-write = allow
 copy-on-select = clipboard
 
-# macOS Optimizations
 macos-titlebar-style = transparent
 macos-window-shadow = true
+macos-option-as-alt = left
+macos-auto-secure-input = true
+macos-secure-input-indication = true
 mouse-hide-while-typing = true
 
-# Working Directory
 window-inherit-working-directory = true
+working-directory = /Users/s30519/work
 
-# Background Transparency (optional)
-background-opacity = 0.90
-background-blur-radius = 20
 
-# Keybindings for Screen Splitting
-# Split down
-keybind = cmd+enter=new_split:down
-# Split right
-keybind = cmd+shift+enter=new_split:right
+# =========================================================
+# Environment
+# =========================================================
 
-# Navigate between panes
-keybind = cmd+left=goto_split:left
-keybind = cmd+right=goto_split:right
-keybind = cmd+up=goto_split:top
-keybind = cmd+down=goto_split:bottom
+env = EDITOR=vim
+env = VISUAL=vim
+env = SHELL=/bin/zsh
 
-# Resize panes
-keybind = cmd+shift+left=resize_split:left,20
-keybind = cmd+shift+right=resize_split:right,20
-keybind = cmd+shift+up=resize_split:up,20
-keybind = cmd+shift+down=resize_split:down,20
 
-# Close current pane
-keybind = cmd+w=close_surface
+# =========================================================
+# Zellij-first keybinds
+# =========================================================
+
+# New panes
+keybind = cmd+enter=text:zellij\ action\ new-pane\ --direction\ down\r
+keybind = cmd+shift+enter=text:zellij\ action\ new-pane\ --direction\ right\r
+
+# Move focus
+keybind = cmd+left=text:zellij\ action\ move-focus\ left\r
+keybind = cmd+right=text:zellij\ action\ move-focus\ right\r
+keybind = cmd+up=text:zellij\ action\ move-focus\ up\r
+keybind = cmd+down=text:zellij\ action\ move-focus\ down\r
+
+# Resize
+keybind = cmd+shift+left=text:zellij\ action\ resize\ increase\ left\r
+keybind = cmd+shift+right=text:zellij\ action\ resize\ increase\ right\r
+
+# Close pane
+keybind = cmd+w=text:zellij\ action\ close-pane\r
+
+# Session launcher
+keybind = cmd+g=text:zellij\ --new-session-with-layout\ ghostty-vscode\ --session\ ghostty-vscode\r
