@@ -1,11 +1,157 @@
 # Gemini API key from 1Password, injected only when Gemini is invoked.
 _load_gemini_key() {
   if [ -z "${GEMINI_API_KEY:-}" ] && command -v op >/dev/null 2>&1; then
-    export GEMINI_API_KEY=$(op item get tphgr6jmx4xwzdiliosyf53kzq --fields label=password --reveal 2>/dev/null || true)
+    local gemini_key
+    gemini_key=$(timeout 15 op item get tphgr6jmx4xwzdiliosyf53kzq --fields label=password --reveal 2>/dev/null || true)
+    if [ -n "$gemini_key" ]; then
+      export GEMINI_API_KEY="$gemini_key"
+    fi
   fi
 }
 
 gemini() {
   _load_gemini_key
   command gemini -y "$@"
+}
+
+aws-cybertical-saml() {
+  emulate -L zsh
+  setopt pipefail
+
+  local input assertion response exports expiration xml expires_at compact_command i duration_seconds
+  local -a words
+  duration_seconds=43200
+  if [[ "${1:-}" == "--dry-run" ]]; then
+    export AWS_CYBERTICAL_SAML_DRY_RUN=1
+    shift
+  fi
+
+  if (($# > 0)); then
+    input="$*"
+  elif [[ -t 0 ]]; then
+    if command -v pbpaste >/dev/null 2>&1; then
+      input="$(pbpaste)"
+    else
+      print -u2 "SAML assertion を標準入力で渡してください"
+      return 2
+    fi
+  else
+    input="$(cat)"
+  fi
+
+  input="${input#SAMLResponse=}"
+
+  if [[ "$input" == *--saml-assertion* ]]; then
+    compact_command="${input//$'\r'/ }"
+    compact_command="${compact_command//$'\n'/ }"
+    if [[ "$compact_command" =~ "--duration-seconds[[:space:]]+'?([0-9]+)'?" ]]; then
+      duration_seconds="${match[1]}"
+    fi
+    if [[ "$compact_command" =~ "--saml-assertion[[:space:]]+'([^']+)'" ]]; then
+      input="${match[1]}"
+    elif [[ "$compact_command" =~ '--saml-assertion[[:space:]]+"([^"]+)"' ]]; then
+      input="${match[1]}"
+    else
+      words=("${(z)input}")
+      for ((i = 1; i <= ${#words}; i++)); do
+        if [[ "${words[$i]}" == "--saml-assertion" ]]; then
+          input="${words[$((i + 1))]}"
+          break
+        fi
+      done
+    fi
+  fi
+
+  while [[ "$input" == \'* || "$input" == \"* ]]; do
+    input="${input#\'}"
+    input="${input#\"}"
+  done
+  while [[ "$input" == *\' || "$input" == *\" ]]; do
+    input="${input%\'}"
+    input="${input%\"}"
+  done
+
+  if [[ -z "$input" ]]; then
+    print -u2 "SAML assertion が空です。assertion 単体か、--saml-assertion を含む aws sts assume-role-with-saml コマンド全文を渡してください"
+    return 2
+  fi
+
+  if [[ "$input" == \<* || "$input" == *samlp:Response* ]]; then
+    xml="$input"
+    assertion="$(printf "%s" "$xml" | base64 | tr -d '\n')"
+  else
+    input="${input//$'\r'/}"
+    input="${input//$'\n'/}"
+    input="${input//[[:space:]]/}"
+    assertion="$input"
+    xml="$(printf "%s" "$assertion" | base64 -D 2>/dev/null || true)"
+  fi
+
+  if [[ -z "$xml" || "$xml" != *saml* ]]; then
+    print -u2 "SAML assertion の base64 decode に失敗しました。assertion が途中で切れている可能性があります。"
+    print -u2 "抽出した assertion 長: ${#assertion} 文字"
+    print -u2 "SAML assertion として読めません。eval \$(aws sts assume-role-with-saml ... --saml-assertion '...') の全文、または assertion 単体をコピーしてください"
+    return 2
+  fi
+
+  if [[ -n "$xml" ]]; then
+    expires_at="$(printf "%s" "$xml" | LC_ALL=C sed -n 's/.*NotOnOrAfter="\([^"]*\)".*/\1/p' | head -1)"
+    if [[ -n "$expires_at" ]]; then
+      print "SAML assertion NotOnOrAfter: $expires_at"
+    fi
+  fi
+
+  if [[ "${AWS_CYBERTICAL_SAML_DRY_RUN:-}" == "1" ]]; then
+    print "dry-run: SAML assertion parsed; duration=${duration_seconds}; STS was not called"
+    return 0
+  fi
+
+  local errfile aws_status
+  errfile="$(mktemp)"
+  response="$(
+    AWS_PAGER= aws sts assume-role-with-saml \
+      --policy '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":"*","Resource":"*"},{"Effect":"Deny","Action":"*","Resource":"*","Condition":{"NotIpAddress":{"aws:SourceIp":"133.32.225.38/32"}}}]}' \
+      --duration-seconds "$duration_seconds" \
+      --role-arn arn:aws:iam::668425684726:role/aws-aitech-cybertical-admin \
+      --principal-arn arn:aws:iam::668425684726:saml-provider/federation.perman.jp \
+      --saml-assertion "$assertion" \
+      --output json 2>"$errfile"
+  )"
+  aws_status=$?
+  if [[ "$aws_status" -ne 0 && "$duration_seconds" -gt 3600 ]] && grep -q "DurationSeconds exceeds the MaxSessionDuration" "$errfile"; then
+    print "DurationSeconds ${duration_seconds} exceeds role MaxSessionDuration; retrying with 3600."
+    duration_seconds=3600
+    response="$(
+      AWS_PAGER= aws sts assume-role-with-saml \
+        --policy '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Action":"*","Resource":"*"},{"Effect":"Deny","Action":"*","Resource":"*","Condition":{"NotIpAddress":{"aws:SourceIp":"133.32.225.38/32"}}}]}' \
+        --duration-seconds "$duration_seconds" \
+        --role-arn arn:aws:iam::668425684726:role/aws-aitech-cybertical-admin \
+        --principal-arn arn:aws:iam::668425684726:saml-provider/federation.perman.jp \
+        --saml-assertion "$assertion" \
+        --output json 2>"$errfile"
+    )"
+    aws_status=$?
+  fi
+  if [[ "$aws_status" -ne 0 ]]; then
+    cat "$errfile" >&2
+    rm -f "$errfile"
+    return "$aws_status"
+  fi
+  rm -f "$errfile"
+
+  exports="$(printf "%s" "$response" | jq -r '.Credentials | [
+    "export AWS_ACCESS_KEY_ID=" + (.AccessKeyId | @sh),
+    "export AWS_SECRET_ACCESS_KEY=" + (.SecretAccessKey | @sh),
+    "export AWS_SESSION_TOKEN=" + (.SessionToken | @sh)
+  ] | .[]')"
+  expiration="$(printf "%s" "$response" | jq -r '.Credentials.Expiration')"
+
+  eval "$exports"
+  export AWS_DEFAULT_REGION="${AWS_DEFAULT_REGION:-ap-northeast-1}"
+  export AWS_REGION="${AWS_REGION:-$AWS_DEFAULT_REGION}"
+  export AWS_DEFAULT_OUTPUT="${AWS_DEFAULT_OUTPUT:-json}"
+  export AWS_PAGER=""
+
+  print "AWS SAML session exported. Expiration: $expiration"
+  AWS_PAGER= aws sts get-caller-identity --output json
 }

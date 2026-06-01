@@ -1,68 +1,7 @@
-# =========================================================
-# Ghostty
-# =========================================================
-
-font-family = "UDEV Gothic"
-font-size = 14
-font-feature = -calt
-font-feature = -liga
-theme = dark:Catppuccin Mocha,light:Catppuccin Latte
-
-window-padding-x = 8
-window-padding-y = 8
-window-padding-balance = true
-
-cursor-style = block
-cursor-style-blink = true
-
-shell-integration = detect
-shell-integration-features = cursor,sudo,title,ssh-env
-notify-on-command-finish = unfocused
-
-clipboard-read = allow
-clipboard-write = allow
-copy-on-select = clipboard
-
-macos-titlebar-style = transparent
-macos-window-shadow = true
-macos-option-as-alt = left
-macos-auto-secure-input = true
-macos-secure-input-indication = true
-mouse-hide-while-typing = true
-
-window-inherit-working-directory = true
-working-directory = /Users/s30519/work
-
-
-# =========================================================
-# Environment
-# =========================================================
-
-env = EDITOR=vim
-env = VISUAL=vim
-env = SHELL=/bin/zsh
-
-
-# =========================================================
-# Zellij-first keybinds
-# =========================================================
-
-# New panes
-keybind = cmd+enter=text:zellij\ action\ new-pane\ --direction\ down\r
-keybind = cmd+shift+enter=text:zellij\ action\ new-pane\ --direction\ right\r
-
-# Move focus
-keybind = cmd+left=text:zellij\ action\ move-focus\ left\r
-keybind = cmd+right=text:zellij\ action\ move-focus\ right\r
-keybind = cmd+up=text:zellij\ action\ move-focus\ up\r
-keybind = cmd+down=text:zellij\ action\ move-focus\ down\r
-
-# Resize
-keybind = cmd+shift+left=text:zellij\ action\ resize\ increase\ left\r
-keybind = cmd+shift+right=text:zellij\ action\ resize\ increase\ right\r
-
-# Close pane
-keybind = cmd+w=text:zellij\ action\ close-pane\r
-
-# Session launcher
-keybind = cmd+g=text:zellij\ --new-session-with-layout\ ghostty-vscode\ --session\ ghostty-vscode\r
+# このファイルは意図的に空です。
+# Ghostty は macOS で XDG と App Support の両方を読み込むため、
+# 設定の二重編集面を避ける目的で、実効設定はすべて XDG 側に集約しています。
+#
+# 正典(canonical): ~/.config/ghostty/config
+#
+# ここに値を書くと App Support が XDG を上書きします(後勝ち)。編集しないこと。

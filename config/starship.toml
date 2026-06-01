@@ -1,0 +1,7 @@
+# Starship prompt 設定
+# 方針: デフォルトを尊重しつつノイズだけ抑制。aws/gcloud module は作業 context
+# 表示に有用なため無効化しない(env var が無ければ元々表示されない)。
+
+# コマンド実行時間は 2 秒以上かかったものだけ表示(短命コマンドの計測表示を抑制)
+[cmd_duration]
+min_time = 2_000

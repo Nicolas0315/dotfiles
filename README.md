@@ -19,6 +19,9 @@ The allowlist lives in `manifest.tsv`.
 - `~/.config/ghostty/config`
 - `~/Library/Application Support/com.mitchellh.ghostty/config`
 - `~/.config/zellij/layouts/ghostty-vscode.kdl`
+- `~/.config/zellij/layouts/ai-dev.kdl`
+- `~/.config/zellij/layouts/multi-agent.kdl`
+- `~/.config/starship.toml`
 
 ## Workflow
 
@@ -106,6 +109,10 @@ secret value.
 ## Current Shell Policy
 
 - nvm Node v22 is the preferred Node/npm/AI CLI provider.
+- nvm is lazy-loaded in `~/.zprofile_local_minimal` (host-local, not tracked
+  here): the `nvm` command triggers `nvm.sh` on first use; node/npm/npx run
+  directly from PATH. This removed ~0.9s from login shell startup
+  (1.82s -> 0.60s together with the compinit daily-cache guard in `~/.zshrc`).
 - APM runtime remains a fallback only.
 - `typeset -U path PATH` deduplicates PATH while preserving first occurrence.
 - Aliases live in `~/.aliases`; do not append duplicate aliases directly to
@@ -115,6 +122,10 @@ secret value.
 - zsh bracketed paste should be bound. If a terminal ever gets stuck emitting
   raw paste markers, run `printf '\e[?2004l'` in that terminal.
 - Ghostty should render the terminal; zellij should own local pane layout.
+- `atuin` owns Ctrl-R history search (initialized after fzf in `~/.tooling`);
+  Up arrow stays native via `--disable-up-arrow`.
+- `starship` renders the prompt; `~/.config/starship.toml` only raises
+  `command_duration` min_time to suppress short-command timing noise.
 - tmux remains available for persistence and remote work.
 - `EDITOR` and `VISUAL` default to `vim` because `nvim` is not installed on
   this host.
@@ -129,5 +140,6 @@ These are intentionally not applied by `validate.sh`.
   as a separate apply gate.
 - `./scripts/brew-check.sh --strict` additionally reports outdated packages.
 - `direnv` is already part of the Homebrew snapshot.
-- `mise`, `starship`, `neovim`, and `atuin` are future opt-in gates, not
-  required for the current workstation baseline.
+- `mise` and `neovim` remain future opt-in gates. `starship` and `atuin` are
+  now enabled (see `~/.config/starship.toml` and the atuin init in
+  `~/.tooling`).

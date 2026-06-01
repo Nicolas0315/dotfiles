@@ -16,8 +16,10 @@ cursor-style = block
 cursor-style-blink = true
 
 shell-integration = detect
-shell-integration-features = cursor,sudo,title,ssh-env
+shell-integration-features = cursor,sudo,title,ssh-env,ssh-terminfo,path
 notify-on-command-finish = unfocused
+# 10s 以上かかったコマンドのみ通知(短命コマンドの誤通知を抑制)
+notify-on-command-finish-after = 10s
 
 clipboard-read = allow
 clipboard-write = allow
@@ -32,6 +34,37 @@ mouse-hide-while-typing = true
 
 window-inherit-working-directory = true
 working-directory = /Users/s30519/work
+
+
+# =========================================================
+# Appearance & behavior (Ghostty 1.2/1.3)
+# =========================================================
+
+# Bold は bright パレット変種を使う(非推奨化された bold-is-bright の後継)
+bold-color = bright
+# padding を最寄りセルの背景色で延長 — 全画面TUIの縁に背景色の硬い境界が出ない
+window-padding-color = extend
+# font-thicken は好み。太すぎる場合はこの行を削除
+font-thicken = true
+# URLプレビューは OSC8 ハイパーリンクのみ(ログ中の生URLで騒がしくならない)
+link-previews = osc8
+
+# ウィンドウ位置/サイズ/split を再起動間で保持(macOS)
+window-save-state = always
+# stable チャンネル: 更新は通知のみ、自動DLしない
+auto-update = check
+
+
+# =========================================================
+# Quick Terminal (Quake式ドロップダウン端末・全アプリ横断)
+# =========================================================
+
+quick-terminal-position = top
+quick-terminal-screen = main
+quick-terminal-animation-duration = 0.15
+quick-terminal-autohide = true
+# cmd+ctrl+` で起動。cmd+`(macOSウィンドウ巡回)/ ctrl+`(VS Code端末)との衝突を避けた選択
+keybind = global:cmd+ctrl+grave_accent=toggle_quick_terminal
 
 
 # =========================================================
@@ -66,3 +99,14 @@ keybind = cmd+w=text:zellij\ action\ close-pane\r
 
 # Session launcher
 keybind = cmd+g=text:zellij\ --new-session-with-layout\ ghostty-vscode\ --session\ ghostty-vscode\r
+
+# AI 開発レイアウト launcher
+keybind = cmd+shift+a=text:zellij\ --new-session-with-layout\ ai-dev\ --session\ ai-dev\r
+keybind = cmd+m=text:zellij\ --new-session-with-layout\ multi-agent\ --session\ multi-agent\r
+
+# Zellij session manager(floating・zellijセッション内で有効)
+keybind = cmd+shift+s=text:zellij\ action\ launch-or-focus-plugin\ session-manager\ --floating\r
+
+# Ghostty ネイティブ split を無効化(pane 管理は zellij に一元化)
+keybind = cmd+d=unbind
+keybind = cmd+shift+d=unbind

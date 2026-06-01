@@ -4,7 +4,27 @@
 # zoxide
 command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 
+# direnv
+command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
+
 # bun completions
-[ -s "/private/var/folders/th/b4c841yj4vsfd0cp40pwkbnd_1cjj0/T/bun-1.3.13-install.SeNv6V/_bun" ] && source "/private/var/folders/th/b4c841yj4vsfd0cp40pwkbnd_1cjj0/T/bun-1.3.13-install.SeNv6V/_bun"
+[[ -o interactive && -f "$HOME/.bun/_bun" ]] && source "$HOME/.bun/_bun"
+
+# gogcli completions
+[[ -o interactive && -f "$HOME/.zsh/completions/_gog" ]] && source "$HOME/.zsh/completions/_gog"
+
+# AWS CLI completions
+if [[ -o interactive ]] && command -v aws_completer >/dev/null 2>&1; then
+  autoload -Uz bashcompinit
+  bashcompinit
+  complete -C "$(command -v aws_completer)" aws
+fi
 
 [[ -o interactive && -t 0 && -f "$HOME/.fzf.zsh" ]] && source "$HOME/.fzf.zsh"
+
+# atuin: shell 履歴のファジー検索(E2E 暗号化の fleet 同期対応)。
+# fzf の後に init して Ctrl-R を atuin が取る。--disable-up-arrow で ↑ は従来の履歴送りを維持。
+[[ -o interactive ]] && command -v atuin >/dev/null 2>&1 && eval "$(atuin init zsh --disable-up-arrow)"
+
+# prompt
+[[ -o interactive && -t 0 && "${TERM:-}" != "dumb" ]] && command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"

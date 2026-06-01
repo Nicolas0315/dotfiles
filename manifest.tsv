@@ -8,3 +8,6 @@ home/.tmux.conf	.tmux.conf
 config/ghostty/config	.config/ghostty/config
 app-support/com.mitchellh.ghostty/config	Library/Application Support/com.mitchellh.ghostty/config
 config/zellij/layouts/ghostty-vscode.kdl	.config/zellij/layouts/ghostty-vscode.kdl
+config/zellij/layouts/ai-dev.kdl	.config/zellij/layouts/ai-dev.kdl
+config/zellij/layouts/multi-agent.kdl	.config/zellij/layouts/multi-agent.kdl
+config/starship.toml	.config/starship.toml

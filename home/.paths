@@ -5,7 +5,10 @@
 
 _path_prepend() {
   [ -d "$1" ] || return
-  export PATH="$1:$PATH"
+  case ":$PATH:" in
+    *":$1:"*) ;;
+    *) export PATH="$1:$PATH" ;;
+  esac
 }
 
 _path_append() {

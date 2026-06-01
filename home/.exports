@@ -1,3 +1,21 @@
 export EDITOR="${EDITOR:-vim}"
 export VISUAL="${VISUAL:-vim}"
 export SSH_AUTH_SOCK="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+
+HISTFILE="${HISTFILE:-$HOME/.zsh_history}"
+HISTSIZE=100000
+SAVEHIST=100000
+setopt SHARE_HISTORY EXTENDED_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
+
+export MANPAGER="${MANPAGER:-sh -c 'col -bx | bat -l man -p'}"
+
+# Gemini API key — cached in macOS Keychain (populated from 1Password item
+# tphgr6jmx4xwzdiliosyf53kzq by ~/.functions:_load_gemini_key on first run, or
+# via: security add-generic-password -a "$USER" -s GEMINI_API_KEY -w "<key>" -U).
+# Eager-export from Keychain at shell startup so non-interactive subshells
+# (Bash tool, CI, etc.) inherit it without going through the shell wrapper.
+if [ -z "${GEMINI_API_KEY:-}" ]; then
+  _gemini_key_cached=$(security find-generic-password -s GEMINI_API_KEY -w 2>/dev/null)
+  [ -n "$_gemini_key_cached" ] && export GEMINI_API_KEY="$_gemini_key_cached"
+  unset _gemini_key_cached
+fi

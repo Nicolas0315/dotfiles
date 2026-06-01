@@ -1,0 +1,31 @@
+// マルチエージェント・レイアウト: claude | codex | gemini を横並び + 共有シェル
+// 起動: zellij --new-session-with-layout multi-agent --session multi-agent  (Ghostty: cmd+m)
+// 各 agent pane は素のシェル。下段の共有シェルが git/grep/test 出力の単一ソース。
+// 役割分担(CLAUDE.md): claude=長い移行/生成, codex=実装/テスト/レビュー, gemini=広域文脈/批評。
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:tab-bar"
+        }
+        children
+        pane size=2 borderless=true {
+            plugin location="zellij:status-bar"
+        }
+    }
+
+    tab name="agents" focus=true split_direction="horizontal" {
+        pane size="70%" split_direction="vertical" {
+            pane name="claude"
+            pane name="codex"
+            pane name="gemini"
+        }
+        pane size="30%" name="shell" focus=true
+    }
+
+    tab name="context" split_direction="vertical" {
+        pane name="tree" {
+            command "ft"
+        }
+        pane name="notes"
+    }
+}
