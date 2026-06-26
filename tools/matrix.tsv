@@ -1,0 +1,39 @@
+# Cross-platform dev tool matrix — single source of truth for Mac/Win parity.
+# Columns: name<TAB>group<TAB>mac_brew<TAB>win_pkg<TAB>check
+#   group:   req=required  ai=AI CLI  rec=recommended
+#   mac_brew: Homebrew formula/cask token (cask: prefix for casks)
+#   win_pkg:  winget:<id> | scoop:<pkg> | npm:<pkg> | wsl (Linux side only)
+#   check:    command that prints a version (used by dev-doctor)
+# Win column is PROPOSED until verified on a Windows host (see assessment.md G1).
+git	req	git	winget:Git.Git	git --version
+gh	req	gh	winget:GitHub.cli	gh --version
+node	req	node	winget:CoreyButler.NVMforWindows	node --version
+python3	req	python@3.12	winget:Python.Python.3.12	python --version
+op	req	cask:1password-cli	winget:AgileBits.1Password.CLI	op --version
+claude	ai	npm:@anthropic-ai/claude-code	npm:@anthropic-ai/claude-code	claude --version
+codex	ai	npm:@openai/codex	npm:@openai/codex	codex --version
+gemini	ai	npm:@google/gemini-cli	npm:@google/gemini-cli	gemini --version
+uv	rec	uv	winget:astral-sh.uv	uv --version
+bun	rec	bun	winget:Oven-sh.Bun	bun --version
+go	rec	go	winget:GoLang.Go	go version
+cargo	rec	rustup	winget:Rustlang.Rustup	cargo --version
+jq	rec	jq	winget:jqlang.jq	jq --version
+ripgrep	rec	ripgrep	winget:BurntSushi.ripgrep.MSVC	rg --version
+fd	rec	fd	winget:sharkdp.fd	fd --version
+bat	rec	bat	winget:sharkdp.bat	bat --version
+fzf	rec	fzf	winget:junegunn.fzf	fzf --version
+zoxide	rec	zoxide	winget:ajeetdsouza.zoxide	zoxide --version
+starship	rec	starship	winget:Starship.Starship	starship --version
+atuin	rec	atuin	scoop:atuin	atuin --version
+zellij	rec	zellij	scoop:zellij	zellij --version
+lazygit	rec	lazygit	winget:JesseDuffield.lazygit	lazygit --version
+direnv	rec	direnv	scoop:direnv	direnv --version
+docker	rec	docker	winget:Docker.DockerDesktop	docker --version
+ffmpeg	rec	ffmpeg	winget:Gyan.FFmpeg	ffmpeg -version
+ast-grep	rec	ast-grep	scoop:ast-grep	ast-grep --version
+typst	rec	typst	winget:Typst.Typst	typst --version
+hyperfine	rec	hyperfine	winget:sharkdp.hyperfine	hyperfine --version
+cloudflared	rec	cloudflared	winget:Cloudflare.cloudflared	cloudflared --version
+ollama	rec	ollama	winget:Ollama.Ollama	ollama --version
+semgrep	rec	semgrep	wsl	semgrep --version
+tmux	rec	tmux	wsl	tmux -V
