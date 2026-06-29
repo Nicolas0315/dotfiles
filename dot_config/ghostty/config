@@ -1,0 +1,70 @@
+# Ghostty config — macOS 開発環境 (CA-20032518 / M5 Max)
+# 実行時リロード: cmd+shift+,
+# 全デフォルト+説明を見る: /Applications/Ghostty.app/Contents/MacOS/ghostty +show-config --default --docs
+# テーマ一覧: /Applications/Ghostty.app/Contents/MacOS/ghostty +list-themes
+
+# --- フォント ---
+# JetBrainsMono Nerd Font Mono = 等幅+アイコングリフ(starship/lsd等のプロンプト表示用)。
+# 2つ目に Hiragino Sans を置くと、1つ目に無い日本語グリフがフォールバックで描画される。
+font-family = JetBrainsMono Nerd Font Mono
+font-family = Hiragino Sans
+font-size = 14
+# 日本語フォントで「ます」「株式会社」等が合字化するのを抑止(コーディング用合字 calt は残る)。
+font-feature = -dlig
+# Retina で線が細く見えるのを補正。
+font-thicken = true
+
+# --- テーマ / 配色 ---
+# 同梱テーマ。好みに応じ +list-themes から差し替え可。
+theme = Catppuccin Mocha
+background-opacity = 0.96
+background-blur-radius = 20
+
+# --- ウィンドウ / macOS 挙動 ---
+# Alt+英字をメタキーとして送る。tmux/zsh/Claude Code のキーバインドで必須。
+macos-option-as-alt = true
+macos-titlebar-style = tabs
+window-padding-x = 8
+window-padding-y = 6
+window-padding-balance = true
+# 再起動・クラッシュ後にウィンドウ/タブ構成を復元。
+window-save-state = always
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 2
+# 選択した瞬間にクリップボードへ。
+copy-on-select = clipboard
+clipboard-read = allow
+clipboard-write = allow
+cursor-style = block
+cursor-style-blink = false
+# 新規タブ/分割は現在の作業ディレクトリを継承(開発作業で頻用)。
+window-inherit-working-directory = true
+# リサイズ時の寸法オーバーレイを非表示。
+resize-overlay = never
+# タブ/分割を閉じるときの確認を出さない。
+confirm-close-surface = false
+# stable チャンネル: 更新は通知のみ、自動DLしない。
+auto-update = check
+
+# --- シェル統合 ---
+# detect で zsh/bash/fish を自動判定。
+shell-integration = detect
+# ssh-terminfo: SSH接続時に xterm-ghostty terminfo をリモートへ自動配布(リモートの表示崩れ防止)。
+# ssh-env: TERM 等の環境をSSH先へ伝播。 sudo: sudo 実行時も terminfo を保持。
+# cursor/title はデフォルト機能なので明示的に残す。
+shell-integration-features = cursor,title,sudo,ssh-env,ssh-terminfo
+
+# 非フォーカスの分割ペインをわずかに暗くして視線誘導。
+unfocused-split-opacity = 0.9
+
+# --- キーバインド: ペイン分割 / 移動(開発作業向け) ---
+keybind = cmd+d=new_split:right
+keybind = cmd+shift+d=new_split:down
+keybind = cmd+[=goto_split:previous
+keybind = cmd+]=goto_split:next
+keybind = cmd+enter=toggle_split_zoom
+
+# --- クイックターミナル ---
+# どの画面からでも cmd+` でドロップダウン起動(macOSのアクセシビリティ許可が必要)。
+quick-terminal-position = top
+keybind = global:cmd+grave_accent=toggle_quick_terminal

@@ -8,7 +8,7 @@
 git	req	git	winget:Git.Git	git --version
 gh	req	gh	winget:GitHub.cli	gh --version
 node	req	node	winget:CoreyButler.NVMforWindows	node --version
-python3	req	python@3.12	winget:Python.Python.3.12	python --version
+python3	req	python@3.13	winget:Python.Python.3.13	python --version
 op	req	cask:1password-cli	winget:AgileBits.1Password.CLI	op --version
 claude	ai	npm:@anthropic-ai/claude-code	npm:@anthropic-ai/claude-code	claude --version
 codex	ai	npm:@openai/codex	npm:@openai/codex	codex --version

@@ -1,0 +1,26 @@
+# Existing copy-based dotfiles repository assets. Keep these in git, but do not
+# let chezmoi apply them into $HOME as top-level files/directories.
+AGENTS.md
+README.md
+manifest.tsv
+.github/
+.github/**
+.gitignore
+app-support/
+app-support/**
+brew/
+brew/**
+config/
+config/**
+docs/
+docs/**
+home/
+home/**
+research/
+research/**
+scripts/
+scripts/**
+tools/
+tools/**
+windows/
+windows/**

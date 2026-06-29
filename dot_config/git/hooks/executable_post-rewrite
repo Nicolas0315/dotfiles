@@ -1,0 +1,5 @@
+#!/bin/sh
+# global wrapper: delegate to the repository's own .git/hooks hook if present
+repo_hook="$(git rev-parse --git-dir)/hooks/post-rewrite"
+[ -x "$repo_hook" ] && exec "$repo_hook" "$@"
+exit 0

@@ -25,6 +25,19 @@ The allowlist lives in `manifest.tsv`.
 
 ## Workflow
 
+Initialize chezmoi against this checkout:
+
+```sh
+chezmoi init --source ~/work/dotfiles
+```
+
+Check the managed chezmoi state without applying changes:
+
+```sh
+chezmoi status
+chezmoi apply --dry-run --verbose
+```
+
 Snapshot the current live files into this repo:
 
 ```sh

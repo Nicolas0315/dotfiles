@@ -1,0 +1,14 @@
+#!/bin/sh
+# global pre-commit: scan staged changes for secrets, then delegate to repo hook
+if command -v gitleaks >/dev/null 2>&1; then
+  if ! gitleaks git --pre-commit --staged --redact --no-banner >/dev/null 2>&1; then
+    gitleaks git --pre-commit --staged --redact --no-banner 2>&1 | grep -iE "secret|finding|leak" >&2
+    echo "" >&2
+    echo "gitleaks: 秘密情報らしき内容を検出したためコミットを中止しました。" >&2
+    echo "誤検知の場合は git commit --no-verify で回避できます。" >&2
+    exit 1
+  fi
+fi
+repo_hook="$(git rev-parse --git-dir)/hooks/pre-commit"
+[ -x "$repo_hook" ] && exec "$repo_hook" "$@"
+exit 0
