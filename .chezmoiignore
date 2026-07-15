@@ -1,0 +1,20 @@
+# Repository assets that live in git but must never be applied into $HOME.
+AGENTS.md
+README.md
+Makefile
+bootstrap.sh
+.github/
+.github/**
+.gitignore
+brew/
+brew/**
+docs/
+docs/**
+research/
+research/**
+scripts/
+scripts/**
+tools/
+tools/**
+windows/
+windows/**

@@ -1,0 +1,8 @@
+# shellcheck shell=sh disable=SC1091
+if [ -f "$HOME/.config/dev-env/profile.sh" ]; then
+  . "$HOME/.config/dev-env/profile.sh"
+fi
+
+if [ -n "${ZSH_VERSION:-}" ]; then
+  typeset -U path PATH
+fi

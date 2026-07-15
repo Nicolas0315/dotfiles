@@ -1,0 +1,485 @@
+# Brewfile — 実機スナップショット由来の完全インベントリ。
+# 再生成: brew bundle dump --describe --force --file=brew/Brewfile
+# 充足チェック: scripts/brew-check.sh(read-only, --no-upgrade)
+
+tap "microsoft/apm", trusted: true
+tap "openclaw/tap"
+tap "steipete/tap", trusted: true
+tap "yakitrak/yakitrak", trusted: true
+# Static analysis and lint tool, for (ba)sh scripts
+brew "shellcheck"
+# Static checker for GitHub Actions workflow files
+brew "actionlint"
+# Code searching, linting, rewriting
+brew "ast-grep"
+# Improved shell history for zsh, bash, fish and nushell
+brew "atuin"
+# Tool for generating GNU Standards-compliant Makefiles
+brew "automake"
+# Automatically restart SSH sessions and tunnels
+brew "autossh"
+# Client for Amazon Elastic Beanstalk web service
+brew "aws-elasticbeanstalk"
+# Official Amazon AWS command-line interface
+brew "awscli"
+# Microsoft Azure CLI 2.0
+brew "azure-cli"
+# Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"
+# Memory upgrade for your coding agent
+brew "beads"
+# Yet another cross-platform graphical process/system monitor
+brew "bottom"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
+# Incredibly fast JavaScript runtime, bundler, test runner, and package manager
+brew "bun"
+# Audit Cargo.lock files for crates with security vulnerabilities
+brew "cargo-audit"
+# Manage your dotfiles across multiple diverse machines, securely
+brew "chezmoi"
+# Cloudflare Tunnel client (formerly Argo Tunnel)
+brew "cloudflared"
+# Cross-platform make
+brew "cmake"
+# Container runtimes on MacOS (and Linux) with minimal setup
+brew "colima"
+# Create and run Linux containers using lightweight virtual machines
+brew "container"
+# GNU File, Shell, and Text utilities
+brew "coreutils"
+# Shell script to build fancy DMGs
+brew "create-dmg"
+# Secure runtime for JavaScript and TypeScript
+brew "deno"
+# Enterprise friendly way of detecting and preventing secrets in code
+brew "detect-secrets"
+# Load/unload environment variables based on $PWD
+brew "direnv"
+# Pack, ship and run any application as a lightweight container
+brew "docker"
+# Docker CLI plugin for extended build capabilities with BuildKit
+brew "docker-buildx"
+# Isolated development environments using Docker
+brew "docker-compose"
+# Embeddable SQL OLAP Database Management System
+brew "duckdb"
+# Disk Usage/Free Utility - a better 'df' alternative
+brew "duf"
+# More intuitive version of du in rust
+brew "dust"
+# Run arbitrary commands when files change
+brew "entr"
+# Modern, maintained replacement for ls
+brew "eza"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Play, record, convert, and stream select audio and video codecs
+brew "ffmpeg"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# GitHub command-line tool
+brew "gh"
+# Remote repository management made easy
+brew "ghq"
+# Distributed revision control system
+brew "git"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
+# Git extension for versioning large files
+brew "git-lfs"
+# Audit git repos for secrets
+brew "gitleaks"
+# Open source programming language to build simple/reliable/efficient software
+brew "go"
+# Command-line tool for generating regular expressions
+brew "grex"
+# Like cURL, but for gRPC
+brew "grpcurl"
+# Development framework for multimedia applications
+brew "gstreamer"
+# Kubernetes package manager
+brew "helm"
+# Uses CSS selectors to extract bits content from HTML files
+brew "htmlq"
+# User-friendly cURL replacement (command-line HTTP client)
+brew "httpie"
+# Command-line benchmarking tool
+brew "hyperfine"
+# Tools and libraries to manipulate images in select formats
+brew "imagemagick"
+# Update of iperf: measures TCP, UDP, and SCTP bandwidth
+brew "iperf3"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Handy way to save and run project-specific commands
+brew "just"
+# Kubernetes CLI To Manage Your Clusters In Style!
+brew "k9s"
+# Kubernetes command-line interface
+brew "kubernetes-cli"
+# Simple terminal UI for git commands
+brew "lazygit"
+# Fast and powerful Git hooks manager for any type of projects
+brew "lefthook"
+# Implementation of the file(1) command
+brew "libmagic"
+# Postgres C API library
+brew "libpq"
+# LLM inference in C/C++
+brew "llama.cpp"
+# Mac App Store command-line interface
+brew "mas"
+# Polyglot runtime manager (asdf rust clone)
+brew "mise"
+# Remote terminal application
+brew "mosh"
+# Open source relational database management system
+brew "mysql-client"
+# Clean C library for processing UTF-8 Unicode data
+brew "utf8proc"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+# Open-source, cross-platform JavaScript runtime environment
+brew "node"
+# Oracle Cloud Infrastructure CLI
+brew "oci-cli"
+# Create, run, and share large language models (LLMs)
+brew "ollama", restart_service: :changed
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# AI coding agent, built for the terminal
+brew "opencode"
+# Vulnerability scanner which uses the OSV database
+brew "osv-scanner"
+# General-purpose scripting language
+brew "php"
+# Audits Python environments and dependency trees for known vulnerabilities
+brew "pip-audit"
+# Execute binaries from Python packages in isolated environments
+brew "pipx"
+# Fast, disk space efficient package manager
+brew "pnpm"
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler"
+# Convert bitmaps to vector graphics
+brew "potrace"
+# Framework for managing multi-language pre-commit hooks
+brew "pre-commit"
+# Modern replacement for ps written in Rust
+brew "procs"
+# Python version management
+brew "pyenv"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.11"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.12"
+# Utility that provides fast incremental file transfer
+brew "rsync"
+# Extremely fast Python linter, written in Rust
+brew "ruff"
+# Cross-platform network monitoring terminal UI with deep packet inspection
+brew "rustnet"
+# Rust toolchain installer
+brew "rustup"
+# Intuitive find & replace CLI
+brew "sd"
+# Easily detect and prevent bugs and anti-patterns in your codebase
+brew "semgrep"
+# Smart session manager for the terminal
+brew "sesh"
+# Autoformat shell script source code
+brew "shfmt"
+# Monitors sleep, wakeup, and idleness of a Mac
+brew "sleepwatcher"
+# Docker-compatible REST API on top of Apple container
+brew "socktainer", restart_service: :changed
+# Cross-shell prompt for astronauts
+brew "starship"
+# OCR (Optical Character Recognition) engine
+brew "tesseract"
+# Feature-rich command-line audio/video downloader
+brew "yt-dlp"
+# Multi-modal AI tool to extract and summarize content
+brew "summarize"
+# System performance benchmark tool
+brew "sysbench"
+# Easiest, most secure way to use WireGuard and 2FA
+brew "tailscale", restart_service: :changed
+# Very fast implementation of tldr in Rust
+brew "tealdeer"
+# Enables extra languages support for Tesseract
+brew "tesseract-lang"
+# Terminal multiplexer
+brew "tmux"
+# Program that allows you to count code, quickly
+brew "tokei"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# Vulnerability scanner for container images, file systems, and Git repos
+brew "trivy"
+# Source code spell checker
+brew "typos-cli"
+# Markup-based typesetting system
+brew "typst"
+# Collection of Linux utilities
+brew "util-linux", link: true
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
+# Executes a program periodically, showing output fullscreen
+brew "watch"
+# Execute commands when watched files change
+brew "watchexec"
+# Watch files and take action when they change
+brew "watchman"
+# Internet file retriever
+brew "wget"
+# Network analyzer and capture tool - without graphical user interface
+brew "wireshark"
+# Command-line tool to install and switch between multiple versions of Xcode
+brew "xcodes"
+# Friendly and fast tool for sending HTTP requests
+brew "xh"
+# Process YAML, JSON, XML, CSV and properties documents from the CLI
+brew "yq"
+# Pluggable terminal workspace, with terminal multiplexer as the base feature
+brew "zellij"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
+# Agent Package Manager (APM): The NPM for AI-Native Development
+brew "microsoft/apm/apm", trusted: true
+# macOS menu bar control plane for local-first crawler CLIs
+brew "openclaw/tap/crawlbar", trusted: true
+# Mirror Discord into SQLite and search server history locally
+brew "openclaw/tap/discrawl", trusted: true
+# Local GitHub issue and PR archive with gh-compatible caching
+brew "openclaw/tap/gitcrawl", trusted: true
+# Google CLI for Gmail, Calendar, Drive, Docs, Sheets, and more
+brew "openclaw/tap/gogcli", trusted: true
+# Local-first Granola crawler into SQLite and Markdown
+brew "openclaw/tap/graincrawl", trusted: true
+# Local-first Notion crawler into SQLite and normalized Markdown
+brew "openclaw/tap/notcrawl", trusted: true
+# Go-based CLI for mirroring Slack workspace data into local SQLite
+brew "openclaw/tap/slacrawl", trusted: true
+# WhatsApp CLI built on whatsmeow
+brew "openclaw/tap/wacli", trusted: true
+# Read-only WhatsApp Desktop archive CLI
+brew "openclaw/tap/wacrawl", trusted: true
+# Local Twitter memory for archives, DMs, likes, bookmarks, and moderation
+brew "steipete/tap/birdclaw", trusted: true
+# Menu bar usage and status CLI
+brew "steipete/tap/codexbar", link: false, trusted: true
+# Send and read iMessage / SMS from the terminal
+brew "steipete/tap/imsg", trusted: true
+# Model Context Protocol runtime and CLI generator
+brew "steipete/tap/mcporter", trusted: true
+# Bundle prompts + files for second-model review
+brew "steipete/tap/oracle", trusted: true
+# Lightning-fast macOS screenshots & AI vision analysis
+brew "steipete/tap/peekaboo", trusted: true
+# Universal file watcher with auto-rebuild for any language or build system
+brew "steipete/tap/poltergeist", link: false, trusted: true
+# Control Sonos speakers from the command-line
+brew "steipete/tap/sonoscli", trusted: true
+brew "yakitrak/yakitrak/notesmd-cli", link: false
+# Password manager that keeps all passwords secure behind one password
+cask "1password"
+# Command-line interface for 1Password
+cask "1password-cli"
+# Terminal interface for Antigravity agents
+cask "antigravity-cli"
+# Configuration manager for AI coding agents
+cask "cc-switch"
+# Terminal-based AI coding assistant
+cask "claude-code"
+# OpenAI's coding agent that runs in your terminal
+cask "codex"
+# Menu bar usage monitor for Codex and Claude
+cask "steipete/tap/codexbar", trusted: true
+# Brings the power of Copilot coding agent directly to your terminal
+cask "copilot-cli"
+cask "font-jetbrains-mono-nerd-font"
+cask "font-udev-gothic"
+# Set of tools to manage resources and applications hosted on Google Cloud
+cask "gcloud-cli"
+# Free cross-platform office suite, fresh version
+cask "libreoffice"
+# Discover, download, and run local LLMs
+cask "lm-studio"
+# Intercept, modify, replay, save HTTP/S traffic
+cask "mitmproxy"
+# Open-source code editor
+cask "visual-studio-code", args: { appdir: "~/Applications" }
+mas "1Password for Safari", id: 1569813296
+mas "Amphetamine", id: 937984704
+mas "Blackmagic Disk Speed Test", id: 425264550
+mas "CapCut", id: 1500855883
+mas "Command X", id: 6448461551
+mas "DaisyDisk", id: 411643860
+mas "GarageBand", id: 682658836
+mas "iMovie", id: 408981434
+mas "Keynote", id: 361285480
+mas "LINE", id: 539883307
+mas "Magnet", id: 441258766
+mas "Numbers", id: 361304891
+mas "Obsidian Web Clipper", id: 6720708363
+mas "Pages", id: 361309726
+mas "Paste", id: 967805235
+mas "Speedtest", id: 1153157709
+mas "Telegram", id: 747648890
+mas "WeChat", id: 836500024
+mas "WhatsApp", id: 310633997
+mas "Xcode", id: 497799835
+vscode "anthropic.claude-code"
+vscode "batisteo.vscode-django"
+vscode "bierner.markdown-checkbox"
+vscode "bierner.markdown-emoji"
+vscode "bierner.markdown-mermaid"
+vscode "bierner.markdown-preview-github-styles"
+vscode "bmewburn.vscode-intelephense-client"
+vscode "bradlc.vscode-tailwindcss"
+vscode "christian-kohler.npm-intellisense"
+vscode "confluentinc.vscode-confluent"
+vscode "cschlosser.doxdocgen"
+vscode "cweijan.vscode-office"
+vscode "dart-code.dart-code"
+vscode "dart-code.flutter"
+vscode "davidanson.vscode-markdownlint"
+vscode "dbaeumer.vscode-eslint"
+vscode "devsense.composer-php-vscode"
+vscode "devsense.intelli-php-vscode"
+vscode "devsense.phptools-vscode"
+vscode "devsense.profiler-php-vscode"
+vscode "docker.docker"
+vscode "donjayamanne.githistory"
+vscode "donjayamanne.python-extension-pack"
+vscode "dsznajder.es7-react-js-snippets"
+vscode "eamodio.gitlens"
+vscode "ecmel.vscode-html-css"
+vscode "editorconfig.editorconfig"
+vscode "ericsia.pythonsnippets3"
+vscode "esbenp.prettier-vscode"
+vscode "formulahendry.auto-close-tag"
+vscode "formulahendry.auto-rename-tag"
+vscode "frenco.vscode-vercel"
+vscode "github.github-vscode-theme"
+vscode "github.vscode-github-actions"
+vscode "github.vscode-pull-request-github"
+vscode "golang.go"
+vscode "grapecity.gc-excelviewer"
+vscode "graphql.vscode-graphql-syntax"
+vscode "jeff-hykin.better-cpp-syntax"
+vscode "kevinrose.vsc-python-indent"
+vscode "magicstack.magicpython"
+vscode "marp-team.marp-vscode"
+vscode "mechatroner.rainbow-csv"
+vscode "mermaidchart.vscode-mermaid-chart"
+vscode "mhutchie.git-graph"
+vscode "mongodb.mongodb-vscode"
+vscode "ms-azure-load-testing.microsoft-testing"
+vscode "ms-azuretools.azure-dev"
+vscode "ms-azuretools.vscode-azure-mcp-server"
+vscode "ms-azuretools.vscode-azureappservice"
+vscode "ms-azuretools.vscode-azurecontainerapps"
+vscode "ms-azuretools.vscode-azurefunctions"
+vscode "ms-azuretools.vscode-azureresourcegroups"
+vscode "ms-azuretools.vscode-azurestaticwebapps"
+vscode "ms-azuretools.vscode-azurestorage"
+vscode "ms-azuretools.vscode-azurevirtualmachines"
+vscode "ms-azuretools.vscode-containers"
+vscode "ms-azuretools.vscode-cosmosdb"
+vscode "ms-azuretools.vscode-docker"
+vscode "ms-ceintl.vscode-language-pack-ja"
+vscode "ms-dotnettools.csdevkit"
+vscode "ms-dotnettools.csharp"
+vscode "ms-dotnettools.vscode-dotnet-runtime"
+vscode "ms-kubernetes-tools.vscode-kubernetes-tools"
+vscode "ms-mssql.data-workspace-vscode"
+vscode "ms-mssql.mssql"
+vscode "ms-mssql.sql-bindings-vscode"
+vscode "ms-mssql.sql-database-projects-vscode"
+vscode "ms-python.debugpy"
+vscode "ms-python.isort"
+vscode "ms-python.python"
+vscode "ms-python.vscode-pylance"
+vscode "ms-python.vscode-python-envs"
+vscode "ms-toolsai.datawrangler"
+vscode "ms-toolsai.jupyter"
+vscode "ms-toolsai.jupyter-keymap"
+vscode "ms-toolsai.jupyter-renderers"
+vscode "ms-toolsai.vscode-jupyter-cell-tags"
+vscode "ms-toolsai.vscode-jupyter-slideshow"
+vscode "ms-vscode-remote.remote-containers"
+vscode "ms-vscode-remote.remote-ssh"
+vscode "ms-vscode-remote.remote-ssh-edit"
+vscode "ms-vscode-remote.remote-wsl"
+vscode "ms-vscode-remote.vscode-remote-extensionpack"
+vscode "ms-vscode.cmake-tools"
+vscode "ms-vscode.cpp-devtools"
+vscode "ms-vscode.cpptools"
+vscode "ms-vscode.cpptools-extension-pack"
+vscode "ms-vscode.cpptools-themes"
+vscode "ms-vscode.live-server"
+vscode "ms-vscode.makefile-tools"
+vscode "ms-vscode.powershell"
+vscode "ms-vscode.remote-explorer"
+vscode "ms-vscode.remote-server"
+vscode "ms-vscode.vscode-node-azure-pack"
+vscode "ms-vscode.vscode-speech"
+vscode "ms-vscode.vscode-speech-language-pack-ja-jp"
+vscode "ms-vsliveshare.vsliveshare"
+vscode "ms-windows-ai-studio.windows-ai-studio"
+vscode "njpwerner.autodocstring"
+vscode "nrwl.angular-console"
+vscode "octref.vetur"
+vscode "oleg-shilo.cs-script"
+vscode "openai.chatgpt"
+vscode "oracle.oracle-java"
+vscode "oxc.oxc-vscode"
+vscode "pkief.material-icon-theme"
+vscode "prisma.prisma-insider"
+vscode "pulumi.pulumi-vscode-tools"
+vscode "redhat.java"
+vscode "redhat.vscode-xml"
+vscode "redhat.vscode-yaml"
+vscode "rust-lang.rust-analyzer"
+vscode "shardulm94.trailing-spaces"
+vscode "shd101wyy.markdown-preview-enhanced"
+vscode "streetsidesoftware.code-spell-checker"
+vscode "stripe.vscode-stripe"
+vscode "tamasfe.even-better-toml"
+vscode "tomoki1207.pdf"
+vscode "twxs.cmake"
+vscode "vadimcn.vscode-lldb"
+vscode "visualstudiotoolsforunity.vstuc"
+vscode "vscjava.vscode-gradle"
+vscode "vscjava.vscode-java-debug"
+vscode "vscjava.vscode-java-dependency"
+vscode "vscjava.vscode-java-pack"
+vscode "vscjava.vscode-java-test"
+vscode "vscjava.vscode-maven"
+vscode "vscode-icons-team.vscode-icons"
+vscode "vscodevim.vim"
+vscode "vsls-contrib.gistfs"
+vscode "vstirbu.vscode-mermaid-preview"
+vscode "vue.volar"
+vscode "wholroyd.jinja"
+vscode "xdebug.php-debug"
+vscode "yzane.markdown-pdf"
+vscode "yzhang.markdown-all-in-one"
+vscode "zhuangtongfa.material-theme"
+vscode "zignd.html-css-class-completion"
+cargo "cargo-nextest"
+uv "aider-chat"
+uv "apm-cli"
+uv "browser-use[cli]"
+uv "markitdown"
+uv "ruff"
+uv "shell-gpt", with: ["click", "rich", "typer"]
+uv "skill-seekers"
+npm "@steipete/poltergeist"
+npm "@tobilu/qmd"
+npm "hunkdiff"
+# usage-pulse はローカルソース(~/work/usage-pulse)からの uv tool install。
+# uv tool install --from ~/work/usage-pulse usage-pulse

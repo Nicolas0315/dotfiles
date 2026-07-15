@@ -1,0 +1,52 @@
+# shellcheck shell=sh disable=SC1091
+if [ -f "$HOME/.config/dev-env/profile.sh" ]; then
+  . "$HOME/.config/dev-env/profile.sh"
+fi
+
+# Local non-shared secrets (incl. OP_SERVICE_ACCOUNT_TOKEN). Values stay outside shared docs/dotfiles.
+# op の非対話認証トークンを先に読み込むため、APIキー取得より前に source する。
+if [ -f "$HOME/.config/dev-env/secrets.local.sh" ]; then
+  . "$HOME/.config/dev-env/secrets.local.sh"
+fi
+
+# opencode Go — API key via 1Password.
+# Keep shell startup non-interactive; set OPENCODE_ALLOW_INTERACTIVE_1PASSWORD=1 only for a deliberate one-off refresh.
+if [ -z "$OPENCODE_API_KEY" ] && { [ -n "$OP_SERVICE_ACCOUNT_TOKEN" ] || [ "$OPENCODE_ALLOW_INTERACTIVE_1PASSWORD" = "1" ]; }; then
+  export OPENCODE_API_KEY="$(op item get h6vmnh3vgibyqftd7dqnbeati4 --fields '認証情報' --reveal 2>/dev/null)"
+fi
+
+if [ -f "$HOME/scripts/aws-saml-login.zsh" ]; then
+  . "$HOME/scripts/aws-saml-login.zsh"
+fi
+
+# Added by LM Studio CLI (lms)
+case ":$PATH:" in
+  *":$HOME/.lmstudio/bin:"*) ;;
+  *) export PATH="$PATH:$HOME/.lmstudio/bin" ;;
+esac
+# End of LM Studio CLI section
+
+if [ -n "${ZSH_VERSION:-}" ]; then
+  typeset -U path PATH
+fi
+
+case ":$PATH:" in
+  *":$HOME/.agents/bin:"*) ;;
+  *) export PATH="$HOME/.agents/bin:$PATH" ;;
+esac
+
+# Keep Homebrew ahead of macOS defaults for interactive shells.
+if [ -n "${ZSH_VERSION:-}" ]; then
+  path=(/opt/homebrew/bin /opt/homebrew/sbin ${path:#/opt/homebrew/bin} ${path:#/opt/homebrew/sbin})
+  typeset -U path PATH
+  export PATH
+fi
+
+# Fable 5 プラン専任運用（期間限定）: サブエージェントを Sonnet 5 に固定し、
+# Fable 本体には俯瞰・立案・委譲のみをさせる。CLAUDE.md を汚さず起動時のみ有効。
+# 出典: https://x.com/oikon48/status/2072599526771421364
+claude-fable() {
+  CLAUDE_CODE_SUBAGENT_MODEL=claude-sonnet-5 command claude --model claude-fable-5 \
+    --append-system-prompt "基本的にタスクや作業の実行は、適切な粒度でsubagentsに実行手順が明確な指示を与えて委譲すること。あなたは全体進行の俯瞰と立案を行う。自己判断による例外は認める" \
+    "$@"
+}
