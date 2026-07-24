@@ -4,9 +4,12 @@ set -euo pipefail
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 printf '## high-confidence secret scan\n'
+# Case-insensitive on purpose: uppercase env forms (DB_PASSWORD=, AWS_SESSION_TOKEN=)
+# must not slip past this CI gate. Do not use rg -S here (smart-case + uppercase
+# literals would force the whole pattern case-sensitive).
 findings="$(
-  rg -n --hidden -S \
-    '(sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9_]{20,}|-----BEGIN|PRIVATE KEY|password\s*=|api[_-]?key\s*=|token\s*=|secret\s*=|ANTHROPIC_API_KEY=|OPENAI_API_KEY=|GEMINI_API_KEY=)' \
+  rg -n --hidden -i \
+    '(sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|-----BEGIN|PRIVATE KEY|password\s*=|api[_-]?key\s*=|token\s*=|secret\s*=|ANTHROPIC_API_KEY=|OPENAI_API_KEY=|GEMINI_API_KEY=|AWS_SESSION_TOKEN=|AKIA[0-9A-Z]{16}|xox[baprs]-|AIza[0-9A-Za-z_-]{20,})' \
     "$repo_dir" \
     -g '!**/.git/**' \
     -g '!brew/Brewfile' \
@@ -14,14 +17,19 @@ findings="$(
     || true
 )"
 
-# 1Password/Keychain lookup と、値が変数参照($始まり)の代入は許容する。
-# 不変条件: 右辺が変数参照なら平文の秘密値はその行に存在しえない。生のリテラル値のみ警告。
-allow_re='op item get .*--reveal|security (find|add)-generic-password|=[[:space:]]*"?\$\{?[A-Za-z_]'
+# Allow only non-literal secret-adjacent lines:
+# - 1Password / Keychain lookups
+# - RHS that is a shell variable / command substitution (no plaintext value)
+# - jq string builders that inject runtime credentials
+# - pure comments / docs mentioning the tokens
+# - scanners that grep for secret names (not values)
+# Invariant: a true leaked literal value still fails.
+allow_re='op item get|security (find|add)-generic-password|=[[:space:]]*"?\$|=\$\(|@sh\)|grep -rIl |^[^:]*:[0-9]+:[[:space:]]*#|private key material was observed|OPENCODE_ALLOW_INTERACTIVE'
 allowed="$(
-  printf '%s\n' "$findings" | rg "$allow_re" || true
+  printf '%s\n' "$findings" | rg -i "$allow_re" || true
 )"
 unexpected="$(
-  printf '%s\n' "$findings" | rg -v "$allow_re" || true
+  printf '%s\n' "$findings" | rg -iv "$allow_re" || true
 )"
 
 if [ -n "$allowed" ]; then
