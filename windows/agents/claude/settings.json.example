@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "opusplan",
+  "effortLevel": "high",
+  "language": "日本語",
+  "autoUpdatesChannel": "latest",
+  "fileCheckpointingEnabled": true,
+  "teammateMode": "auto"
+}
