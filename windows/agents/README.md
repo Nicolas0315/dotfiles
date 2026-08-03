@@ -8,7 +8,7 @@ defaults used on the Katala OS workstation.
 - `codex/config.toml.example` — stable global defaults only. It intentionally
   excludes machine-specific MCP commands, project trust entries, hook trust
   hashes, temporary browser pipes, auth, and state databases.
-- `codex/agents/*.toml` — the 26 custom Codex role definitions. These are
+- `codex/agents/*.toml` — the 22 custom Codex role definitions. These are
   portable role prompts and model/sandbox choices; they do not contain tokens
   or credentials.
 - `claude/settings.json.example` — stable Claude Code model and UI defaults.
