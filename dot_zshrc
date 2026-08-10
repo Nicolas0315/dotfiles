@@ -57,7 +57,22 @@ claude-fable() {
     "$@"
 }
 
-# mise: fleet toolchain pins (node 24 LTS / python 3.13) — P1 適用 2026-07-27
-if command -v mise >/dev/null 2>&1; then
-  eval "$(mise activate zsh)"
+# mise (node 24 LTS / python 3.13 のフリートピン) の activate は profile.sh が担当する。
+# ここで再度 eval すると同じ内容の生成に毎シェル +13ms かかるだけなので置かない。
+
+# 履歴。macOS の /etc/zshrc:17-18 が HISTSIZE=2000 / SAVEHIST=1000 を無条件に置くため、
+# profile.sh(~/.zprofile 経由 = /etc/zshrc より前)に書くと必ず上書きされる。ここが唯一
+# 効く位置。既定のままだと tmux でペインを並べたとき、後に終了したペインが他ペインの
+# 履歴を丸ごと上書きして消す。
+# SHARE_HISTORY は意図的に外している ―― ↑ が他ペインのコマンドを拾うと作業単位の履歴
+# として使えなくなるため。横断検索は atuin(Ctrl-R)が別DBで担当し、zsh 側の ↑ は
+# ペインローカルに徹させる。
+if [ -n "${ZSH_VERSION:-}" ]; then
+  HISTFILE="$HOME/.zsh_history"
+  HISTSIZE=200000
+  SAVEHIST=200000
+  setopt APPEND_HISTORY INC_APPEND_HISTORY EXTENDED_HISTORY
+  setopt HIST_IGNORE_ALL_DUPS HIST_REDUCE_BLANKS
+  # 先頭に空白を置いたコマンドは履歴に残さない(トークンを含む一時コマンド用の逃げ道)。
+  setopt HIST_IGNORE_SPACE
 fi

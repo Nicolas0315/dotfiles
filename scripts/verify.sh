@@ -32,6 +32,7 @@ for f in \
   "$repo_dir/dot_config/starship.toml" \
   "$repo_dir/dot_config/mise/config.toml" \
   "$repo_dir/symlink_dot_tmux.conf.tmpl" \
+  "$repo_dir/docs/new-mac.md" \
   "$repo_dir/brew/Brewfile"; do
   [ -f "$f" ] || { printf 'missing source file: %s\n' "$f" >&2; exit 1; }
 done
@@ -45,5 +46,11 @@ if grep -rn '/Users/[a-z0-9]' \
   exit 1
 fi
 printf 'ok: no hardcoded home paths\n\n'
+
+printf '## new Mac entrypoint\n'
+grep -q 'bootstrap.sh --check' "$repo_dir/docs/new-mac.md"
+grep -q 'scripts/verify.sh' "$repo_dir/docs/new-mac.md"
+grep -q 'scripts/bootstrap.sh' "$repo_dir/docs/new-mac.md"
+printf 'ok: new Mac runbook has preflight, verification, and agent-context setup\n\n'
 
 "$repo_dir/scripts/secret-scan.sh"

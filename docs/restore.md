@@ -10,6 +10,14 @@ chezmoi diff
 chezmoi apply --dry-run --verbose
 ```
 
+`bootstrap.sh --apply` creates a pre-apply archive under
+`~/.local/state/dotfiles-backups/bootstrap/<timestamp>/` and retains the five
+newest runs. It prints the exact restore command:
+
+```sh
+tar -xzf ~/.local/state/dotfiles-backups/bootstrap/<timestamp>/live-home-before-apply.tar.gz -C ~
+```
+
 ## Restore A Live File From The Repo
 
 ```sh

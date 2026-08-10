@@ -2,10 +2,19 @@ DOTFILES_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 .DEFAULT_GOAL := doctor
 
-.PHONY: bootstrap verify doctor doctor-verbose update runtime-upgrade clean help
+.PHONY: bootstrap bootstrap-check bootstrap-packages bootstrap-apply verify doctor doctor-verbose update runtime-upgrade clean help
 
 bootstrap: ## 新マシン: brew→mise→chezmoi→doctor を一括実行
 	@bash $(DOTFILES_DIR)bootstrap.sh
+
+bootstrap-check: ## 新マシン: 書き込みなしの事前確認
+	@bash $(DOTFILES_DIR)bootstrap.sh --check
+
+bootstrap-packages: ## 新マシン: Homebrew/Brewfile を導入
+	@bash $(DOTFILES_DIR)bootstrap.sh --packages
+
+bootstrap-apply: ## 新マシン: dotfiles/runtime を適用して検証
+	@bash $(DOTFILES_DIR)bootstrap.sh --apply
 
 verify: ## リポ整合性チェック (CI と同一: 構文・レイアウト・secrets)
 	@bash $(DOTFILES_DIR)scripts/verify.sh

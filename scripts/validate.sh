@@ -14,7 +14,12 @@ zsh -n \
 printf 'ok: zsh fragments\n\n'
 
 printf '## chezmoi state\n'
-chezmoi status
+chezmoi_status="$(chezmoi status)"
+if [ -n "$chezmoi_status" ]; then
+  printf '%s\n' "$chezmoi_status" >&2
+  printf 'chezmoi source and live state differ\n' >&2
+  exit 1
+fi
 printf 'ok: chezmoi status (empty output above = source matches live)\n\n'
 
 printf '## live command resolution\n'

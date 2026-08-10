@@ -5,9 +5,12 @@
 
 # --- フォント ---
 # JetBrainsMono Nerd Font Mono = 等幅+アイコングリフ(starship/lsd等のプロンプト表示用)。
-# 2つ目に Hiragino Sans を置くと、1つ目に無い日本語グリフがフォールバックで描画される。
+# フォールバックは UDEV Gothic。ASCII が JetBrains Mono 由来で日本語グリフがその厳密に2倍幅のため、
+# 主フォントのセル幅と整数比で一致する。Hiragino Sans はプロポーショナルで整数比にならず、
+# lazygit/btop/tmux ステータス等の TUI で日本語行だけ列がずれる。
+# 派生の JPDOC 版は「−」「≡」等の曖昧幅文字を全角にするため TUI が崩れる。素の UDEV Gothic を使う。
 font-family = JetBrainsMono Nerd Font Mono
-font-family = Hiragino Sans
+font-family = UDEV Gothic
 font-size = 14
 # 日本語フォントで「ます」「株式会社」等が合字化するのを抑止(コーディング用合字 calt は残る)。
 font-feature = -dlig
@@ -19,6 +22,20 @@ font-thicken = true
 theme = TokyoNight Night
 background-opacity = 0.96
 background-blur-radius = 20
+# ターミナル色を Display P3 として解釈したい場合は次を有効化。発色は鮮やかになるが
+# テーマ作者が意図した sRGB 値からはずれるため既定(srgb)のままにしてある。
+# window-colorspace = display-p3
+
+# --- 描画品質 ---
+# 半透明背景では赤/緑など補色の組み合わせでグリフ縁に暗いフリンジが出る。linear-corrected は
+# それを消しつつ、native と比べた文字の太さの変化を補正する(linear 単体だと細く/太くなる)。
+alpha-blending = linear-corrected
+# TUI が背景と同色の前景色を指定したときの「見えない文字」を防ぐ WCAG コントラスト下限。
+minimum-contrast = 1.1
+# 行の高さを1割広げる。日英混在の長い出力で行の走査性が上がる。
+adjust-cell-height = 10%
+# エージェント実行の長大な出力を遡れるように既定10MB→50MB(サーフェス単位・遅延確保)。
+scrollback-limit = 50000000
 
 # --- ウィンドウ / macOS 挙動 ---
 # Alt+英字をメタキーとして送る。tmux/zsh/Claude Code のキーバインドで必須。
@@ -56,6 +73,8 @@ shell-integration-features = cursor,title,sudo,ssh-env,ssh-terminfo
 
 # 非フォーカスの分割ペインをわずかに暗くして視線誘導。
 unfocused-split-opacity = 0.9
+# 分割の境界線。既定は背景色と同化して3分割以上で境目が読めなくなる。
+split-divider-color = #3b4261
 
 # --- キーバインド: ペイン分割 / 移動(開発作業向け) ---
 keybind = cmd+d=new_split:right
@@ -63,8 +82,20 @@ keybind = cmd+shift+d=new_split:down
 keybind = cmd+[=goto_split:previous
 keybind = cmd+]=goto_split:next
 keybind = cmd+enter=toggle_split_zoom
+# 3分割以上になると previous/next の順序が直感と合わないため方向指定も用意。
+keybind = cmd+opt+left=goto_split:left
+keybind = cmd+opt+right=goto_split:right
+keybind = cmd+opt+up=goto_split:up
+keybind = cmd+opt+down=goto_split:down
+keybind = cmd+ctrl+left=resize_split:left,20
+keybind = cmd+ctrl+right=resize_split:right,20
+keybind = cmd+ctrl+up=resize_split:up,20
+keybind = cmd+ctrl+down=resize_split:down,20
+keybind = cmd+ctrl+equal=equalize_splits
 
 # --- クイックターミナル ---
 # どの画面からでも cmd+` でドロップダウン起動(macOSのアクセシビリティ許可が必要)。
 quick-terminal-position = top
+# 既定0.2秒は「思い立って叩く」用途には待たされる。
+quick-terminal-animation-duration = 0.1
 keybind = global:cmd+grave_accent=toggle_quick_terminal

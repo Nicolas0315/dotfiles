@@ -1,8 +1,15 @@
 # Katala OS Dotfiles
 
-macOS dotfiles managed with [chezmoi](https://www.chezmoi.io/), plus a full Homebrew/mas/VS Code/uv/npm tool inventory and a one-shot bootstrap script for setting up a new Mac.
+macOS dotfiles managed with [chezmoi](https://www.chezmoi.io/), plus a full Homebrew/mas/VS Code/uv/npm tool inventory and a resumable bootstrap for setting up a new Mac.
 
 ## New Mac Setup
+
+Canonical checklist: [`docs/new-mac.md`](docs/new-mac.md). Run the read-only
+preflight first:
+
+```sh
+~/work/dotfiles/bootstrap.sh --check
+```
 
 1. Install Xcode Command Line Tools (Homebrew's installer also triggers this):
 
@@ -17,13 +24,17 @@ macOS dotfiles managed with [chezmoi](https://www.chezmoi.io/), plus a full Home
    ~/work/dotfiles/bootstrap.sh
    ```
 
+   For a clean Mac, use `--packages`, complete the manual account gates and
+   companion repositories, then use `--apply`. Running without an option runs
+   both phases when prerequisites already exist. See the canonical checklist.
+
    `bootstrap.sh` runs four phases:
 
    | Phase | What it does |
    | --- | --- |
    | 1. Homebrew | Installs Homebrew if missing, then `brew bundle` against `brew/Brewfile` (taps, formulae, casks, mas apps, VS Code extensions, uv/npm/cargo tools) |
-   | 2. Runtimes | `mise install` — Node 24 / Python 3.13 pinned in `dot_config/mise/config.toml` |
-   | 3. Dotfiles | `chezmoi init --source ~/work/dotfiles` + `chezmoi apply` |
+   | 2. Dotfiles | `chezmoi init --source ~/work/dotfiles` + `chezmoi apply` |
+   | 3. Runtimes | `mise install` using `dot_config/mise/config.toml` |
    | 4. Doctor | `scripts/doctor.sh` health check |
 
 3. Manual gates that bootstrap intentionally does not automate:
