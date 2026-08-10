@@ -45,6 +45,7 @@ chezmoi source state (applied into `$HOME`):
 - `dot_config/mise/config.toml` — pinned runtimes
 - `symlink_dot_tmux.conf.tmpl` — `~/.tmux.conf` symlink into `katala-tooling`
 - `dot_config/private_dev-env/` — shared shell profile shim
+- `dot_config/nvim/` — Neovim config (`init.lua`) with `lazy-lock.json` pinning every plugin commit
 
 Repo-only assets (never applied to `$HOME`, listed in `.chezmoiignore`):
 
