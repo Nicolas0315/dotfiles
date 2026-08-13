@@ -76,3 +76,19 @@ if [ -n "${ZSH_VERSION:-}" ]; then
   # 先頭に空白を置いたコマンドは履歴に残さない(トークンを含む一時コマンド用の逃げ道)。
   setopt HIST_IGNORE_SPACE
 fi
+
+# Ghostty の新規ウィンドウは herdr セッションへ入る。herdr 外で起動したエージェントは
+# 永続化・サイドバー・エージェント状態・テレメトリの全てから外れるため、導線を1本に寄せる。
+# TERM_PROGRAM を見るのは Cursor/VS Code/Claude Desktop の内蔵端末を巻き込まないため。
+# HERDR_ENV はペイン内 zsh に herdr が入れるので、これが再帰の停止条件になる。
+# 逃げ道: NO_HERDR=1 zsh、または herdr を終了すれば素のプロンプトに戻る(exec していない)。
+# -t 1 は tty 無しの `zsh -i -c` 対策。-o interactive だけだと herdr が端末初期化に
+# 失敗して Rust の panic を吐く(実測)。
+if [[ -o interactive ]] && [[ -t 1 ]] \
+  && [[ "${TERM_PROGRAM:-}" == "ghostty" ]] \
+  && [[ -z "${HERDR_ENV:-}" ]] \
+  && [[ -z "${SSH_CONNECTION:-}" ]] \
+  && [[ -z "${NO_HERDR:-}" ]] \
+  && command -v herdr >/dev/null 2>&1; then
+  herdr
+fi

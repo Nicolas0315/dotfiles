@@ -77,21 +77,21 @@ unfocused-split-opacity = 0.9
 split-divider-color = #3b4261
 
 # --- キーバインド: ペイン分割 / 移動(開発作業向け) ---
-keybind = cmd+d=new_split:right
-keybind = cmd+shift+d=new_split:down
-keybind = cmd+[=goto_split:previous
-keybind = cmd+]=goto_split:next
-keybind = cmd+enter=toggle_split_zoom
-# 3分割以上になると previous/next の順序が直感と合わないため方向指定も用意。
-keybind = cmd+opt+left=goto_split:left
-keybind = cmd+opt+right=goto_split:right
-keybind = cmd+opt+up=goto_split:up
-keybind = cmd+opt+down=goto_split:down
-keybind = cmd+ctrl+left=resize_split:left,20
-keybind = cmd+ctrl+right=resize_split:right,20
-keybind = cmd+ctrl+up=resize_split:up,20
-keybind = cmd+ctrl+down=resize_split:down,20
-keybind = cmd+ctrl+equal=equalize_splits
+# 分割の実体は herdr が持つ。Ghostty 自身の new_split で作った surface は herdr の
+# 永続化・サイドバー・エージェント状態・テレメトリの全てから外れる「消える作業場所」に
+# なるため、cmd 系は herdr の prefix(ctrl+b = \x02)へ転送して系統を1本にしている。
+# 対応する herdr 側の既定キーは herdr --default-config の [keys] を参照。
+keybind = cmd+d=text:\x02v
+keybind = cmd+shift+d=text:\x02-
+keybind = cmd+[=text:\x02\x1b[Z
+keybind = cmd+]=text:\x02\t
+keybind = cmd+enter=text:\x02z
+keybind = cmd+opt+left=text:\x02h
+keybind = cmd+opt+down=text:\x02j
+keybind = cmd+opt+up=text:\x02k
+keybind = cmd+opt+right=text:\x02l
+# herdr のリサイズはモーダル(入ってから矢印)なので、方向別4キーは1キーに畳む。
+keybind = cmd+ctrl+r=text:\x02r
 
 # --- クイックターミナル ---
 # どの画面からでも cmd+` でドロップダウン起動(macOSのアクセシビリティ許可が必要)。
