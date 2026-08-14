@@ -97,3 +97,7 @@ if [[ -o interactive ]] && [[ -t 1 ]] \
   && command -v herdr >/dev/null 2>&1; then
   herdr
 fi
+
+# metavr shell completions
+fpath=("$HOME/.metavr/completions" $fpath)
+autoload -Uz compinit && compinit
