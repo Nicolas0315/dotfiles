@@ -15,6 +15,17 @@ if [ -z "$OPENCODE_API_KEY" ] && { [ -n "$OP_SERVICE_ACCOUNT_TOKEN" ] || [ "$OPE
   export OPENCODE_API_KEY="$(op item get h6vmnh3vgibyqftd7dqnbeati4 --fields '認証情報' --reveal 2>/dev/null)"
 fi
 
+# EDINET DB MCP — API key via 1Password. Claude Code の headers が ${EDINETDB_API_KEY} を展開する。
+# item はタイトルではなく ID 指定。同名 "EDINET DB" が2件あり、タイトル参照は
+# "More than one item matches" で空文字を返して MCP が 401 になる。
+if [ -z "$EDINETDB_API_KEY" ] && [ -n "$OP_SERVICE_ACCOUNT_TOKEN" ]; then
+  export EDINETDB_API_KEY="$(op read 'op://Katala-Agents/nstv7iteqdli2xlrrrkqvu4hwe/credential' 2>/dev/null)"
+fi
+
+# op はアプリ統合より SA トークンを優先するため、SA が刺さっていると全 vault が
+# Katala-Agents の read 専用に降格する。個人 vault を触る時だけ SA を外して呼ぶ。
+opa() { env -u OP_SERVICE_ACCOUNT_TOKEN op "$@"; }
+
 if [ -f "$HOME/scripts/aws-saml-login.zsh" ]; then
   . "$HOME/scripts/aws-saml-login.zsh"
 fi
