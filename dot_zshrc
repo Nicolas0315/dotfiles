@@ -9,17 +9,11 @@ if [ -f "$HOME/.config/dev-env/secrets.local.sh" ]; then
   . "$HOME/.config/dev-env/secrets.local.sh"
 fi
 
-# opencode Go — API key via 1Password.
-# Keep shell startup non-interactive; set OPENCODE_ALLOW_INTERACTIVE_1PASSWORD=1 only for a deliberate one-off refresh.
-if [ -z "$OPENCODE_API_KEY" ] && { [ -n "$OP_SERVICE_ACCOUNT_TOKEN" ] || [ "$OPENCODE_ALLOW_INTERACTIVE_1PASSWORD" = "1" ]; }; then
-  export OPENCODE_API_KEY="$(op item get h6vmnh3vgibyqftd7dqnbeati4 --fields '認証情報' --reveal 2>/dev/null)"
-fi
-
-# EDINET DB MCP — API key via 1Password. Claude Code の headers が ${EDINETDB_API_KEY} を展開する。
-# item はタイトルではなく ID 指定。同名 "EDINET DB" が2件あり、タイトル参照は
-# "More than one item matches" で空文字を返して MCP が 401 になる。
-if [ -z "$EDINETDB_API_KEY" ] && [ -n "$OP_SERVICE_ACCOUNT_TOKEN" ]; then
-  export EDINETDB_API_KEY="$(op read 'op://Katala-Agents/nstv7iteqdli2xlrrrkqvu4hwe/credential' 2>/dev/null)"
+# 1Password 由来の API キー。op read は1.5〜3秒かかるため起動ごとには呼ばず、
+# refresh-agent-secrets が書いたキャッシュを読む。SA トークンを条件にすると、
+# アプリ統合しか無いホストで全キーが無言で未設定になり MCP が 401 で落ちる。
+if [ -r "$HOME/.config/dev-env/secrets.cache.sh" ]; then
+  . "$HOME/.config/dev-env/secrets.cache.sh"
 fi
 
 # op はアプリ統合より SA トークンを優先するため、SA が刺さっていると全 vault が
