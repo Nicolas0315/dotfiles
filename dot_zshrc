@@ -47,8 +47,14 @@ case ":$PATH:" in
 esac
 
 # Keep Homebrew ahead of macOS defaults for interactive shells.
+# mise shims は Homebrew より前に置く。ここが Homebrew 単独だと、profile.sh が先に載せた
+# mise shims をこの再並べ替えが追い越し、対話シェルの node/python3 が Homebrew 実体
+# (v26.7.0 / 3.14.x) に戻ってフリートピン(node 24 / python 3.13)が無効化される。
 if [ -n "${ZSH_VERSION:-}" ]; then
   path=(/opt/homebrew/bin /opt/homebrew/sbin ${path:#/opt/homebrew/bin} ${path:#/opt/homebrew/sbin})
+  if [ -d "$HOME/.local/share/mise/shims" ]; then
+    path=("$HOME/.local/share/mise/shims" ${path:#$HOME/.local/share/mise/shims})
+  fi
   typeset -U path PATH
   export PATH
 fi

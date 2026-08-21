@@ -20,8 +20,8 @@ font-thicken = true
 # --- テーマ / 配色 ---
 # 同梱テーマ。好みに応じ +list-themes から差し替え可。
 theme = TokyoNight Night
-background-opacity = 0.96
-background-blur-radius = 20
+background-opacity = 1.0
+background-blur-radius = 0
 # ターミナル色を Display P3 として解釈したい場合は次を有効化。発色は鮮やかになるが
 # テーマ作者が意図した sRGB 値からはずれるため既定(srgb)のままにしてある。
 # window-colorspace = display-p3
@@ -29,13 +29,13 @@ background-blur-radius = 20
 # --- 描画品質 ---
 # 半透明背景では赤/緑など補色の組み合わせでグリフ縁に暗いフリンジが出る。linear-corrected は
 # それを消しつつ、native と比べた文字の太さの変化を補正する(linear 単体だと細く/太くなる)。
-alpha-blending = linear-corrected
+alpha-blending = native
 # TUI が背景と同色の前景色を指定したときの「見えない文字」を防ぐ WCAG コントラスト下限。
 minimum-contrast = 1.1
 # 行の高さを1割広げる。日英混在の長い出力で行の走査性が上がる。
 adjust-cell-height = 10%
-# エージェント実行の長大な出力を遡れるように既定10MB→50MB(サーフェス単位・遅延確保)。
-scrollback-limit = 50000000
+# エージェント実行の長大な出力を遡れるように既定10MB→10MB(サーフェス単位・遅延確保)。
+scrollback-limit = 10000000
 
 # --- ウィンドウ / macOS 挙動 ---
 # Alt+英字をメタキーとして送る。tmux/zsh/Claude Code のキーバインドで必須。
