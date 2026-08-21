@@ -1,11 +1,25 @@
+# Starship — Katala フリート正典。実効パスは各ノードの ~/.config/starship.toml。
+# 記号は ASCII のみ。Windows Terminal 4台は font 未指定(既定 Cascadia Mono = 非 Nerd Font)で、
+# Nerd Font グリフを置くと豆腐になる。macOS の Ghostty 側だけ Nerd Font を持つ。
+
 add_newline = false
+# 既定 500ms / 30ms は、大きいリポの git 状態取得と Windows のファイル走査で足りず
+# starship がタイムアウト警告をプロンプトに出す。
 command_timeout = 1000
 scan_timeout = 100
-format = "$directory$git_branch$git_status$python$nodejs$rust$cmd_duration$line_break$character"
 
-[character]
-success_symbol = "[>](bold green)"
-error_symbol = "[>](bold red)"
+format = "$username$hostname$directory$git_branch$git_status$shell$python$nodejs$rust$golang$cmd_duration$status$line_break$character"
+
+[username]
+show_always = false
+format = "[$user]($style)"
+style_user = "bold yellow"
+
+[hostname]
+# 6ノードを SSH で跨ぐので、リモートにいるときだけノード名を出す。
+ssh_only = true
+format = "[@$hostname]($style) "
+style = "bold cyan"
 
 [directory]
 truncation_length = 3
@@ -20,6 +34,16 @@ style = "bold purple"
 format = " [$all_status$ahead_behind]($style)"
 style = "bold yellow"
 
+[shell]
+# bash(git-bash) / bash(WSL) / zsh / pwsh が同一ノードに同居するため、今どれかを明示する。
+disabled = false
+format = " [$indicator]($style)"
+style = "bold cyan"
+bash_indicator = "bash"
+zsh_indicator = "zsh"
+powershell_indicator = "pwsh"
+cmd_indicator = "cmd"
+
 [python]
 format = " [py $version]($style)"
 style = "green"
@@ -32,7 +56,21 @@ style = "green"
 format = " [rs $version]($style)"
 style = "red"
 
+[golang]
+format = " [go $version]($style)"
+style = "cyan"
+
 [cmd_duration]
 min_time = 2000
 format = " [$duration]($style)"
 style = "dimmed yellow"
+
+[status]
+# 失敗を character の色だけでなく終了コードで出す。エージェントの実行結果を追うのに要る。
+disabled = false
+format = " [exit:$status]($style)"
+style = "bold red"
+
+[character]
+success_symbol = "[>](bold green)"
+error_symbol = "[>](bold red)"
