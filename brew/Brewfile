@@ -80,8 +80,6 @@ brew "ffmpeg"
 brew "fzf"
 # GitHub command-line tool
 brew "gh"
-# Remote repository management made easy
-brew "ghq"
 # Distributed revision control system
 brew "git"
 # Syntax-highlighting pager for git and diff output
@@ -132,6 +130,8 @@ brew "llama.cpp"
 brew "mas"
 # Polyglot runtime manager (asdf rust clone)
 brew "mise"
+# Deep clean and optimize your Mac
+brew "mole"
 # Remote terminal application
 brew "mosh"
 # Open source relational database management system
