@@ -72,4 +72,11 @@ foreach ($p in $plan) {
   Write-Output "==> installing $($p.Name): $($p.Exe) $($p.Args -join ' ')"
   & $p.Exe @($p.Args)
 }
+
+# ghq uses Git's global config. Keep the default root (~/ghq); existing ~/work
+# repositories are intentionally not migrated or added as a scan root.
+if (Get-Command git -ErrorAction SilentlyContinue) {
+  git config --global ghq.user Nicolas0315
+  git config --global ghq.defaultHost github.com
+}
 Write-Output "setup.ps1: done. Run dev-doctor.ps1 to verify."

@@ -80,6 +80,8 @@ brew "ffmpeg"
 brew "fzf"
 # GitHub command-line tool
 brew "gh"
+# Manage repository clones under ~/ghq
+brew "ghq"
 # Distributed revision control system
 brew "git"
 # Syntax-highlighting pager for git and diff output

@@ -7,6 +7,7 @@
 # Win column is PROPOSED until verified on a Windows host (see assessment.md G1).
 git	req	git	winget:Git.Git	git --version
 gh	req	gh	winget:GitHub.cli	gh --version
+ghq	req	ghq	winget:x-motemen.ghq	ghq --version
 node	req	node	winget:CoreyButler.NVMforWindows	node --version
 python3	req	python@3.13	winget:Python.Python.3.13	python --version
 op	req	cask:1password-cli	winget:AgileBits.1Password.CLI	op --version

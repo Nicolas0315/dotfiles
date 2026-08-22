@@ -41,6 +41,9 @@ op inject -i .env.tmpl -o .env
 pwsh -File windows\dev-doctor.ps1
 ```
 
+`ghq`は`winget:x-motemen.ghq`から導入し、新規cloneだけを既定の
+`$HOME\ghq\<host>\<owner>\<repo>`へ置きます。既存`$HOME\work`は移動しません。
+
 ## Notes
 
 - `tools/matrix.tsv` is the single source of truth shared with macOS. Update it
