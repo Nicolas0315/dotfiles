@@ -39,9 +39,7 @@ done
 printf 'ok: source layout\n\n'
 
 printf '## no hardcoded home paths\n'
-if grep -rn '/Users/[a-z0-9]' \
-  --exclude-dir=.git --exclude-dir=docs --exclude-dir=research \
-  "$repo_dir" >&2; then
+if git -C "$repo_dir" grep -n '/Users/[a-z0-9]' -- ':!docs/**' ':!research/**' >&2; then
   printf 'hardcoded /Users/<name> path found; use ~ or {{ .chezmoi.homeDir }}\n' >&2
   exit 1
 fi
