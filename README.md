@@ -92,7 +92,21 @@ Verification:
 ./scripts/validate.sh        # local Mac gate: live commands, startup time, Ghostty config
 ./scripts/brew-check.sh      # is the Brewfile satisfied? (read-only, --no-upgrade)
 ./scripts/secret-scan.sh     # standalone secret scan
+./scripts/sync-editor-extensions.sh --check  # default local VS Code/Cursor store
 ```
+
+Editor extensions are intentionally limited to the Japanese language pack and
+Markdown Preview Enhanced. Apply the shared allowlist explicitly with
+`scripts/sync-editor-extensions.sh --apply` on macOS or
+`windows/sync-editor-extensions.ps1 -Apply` on Windows. Claude Code and Codex
+IDE extensions remain opt-in because their CLI/desktop clients work without
+editor extensions.
+
+This only manages each editor's default local extension store. Independent
+profiles and Remote SSH/WSL/container extension stores stay separate, and
+Settings Sync is not changed. Before pruning, the script saves an `id@version`
+manifest under `~/.local/state/editor-extension-backups`; reinstall those entries
+to restore a previous set.
 
 ## Secret Handling
 

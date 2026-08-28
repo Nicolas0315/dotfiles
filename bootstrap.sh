@@ -46,7 +46,11 @@ if [ "$MODE" = "check" ]; then
     _info "Homebrew is not installed; packages or all mode will install it"
   fi
   if command -v chezmoi >/dev/null 2>&1; then
-    chezmoi init --source "$DOTFILES_DIR" --dry-run --verbose
+    if [ -f "$HOME/.config/chezmoi/chezmoi.toml" ]; then
+      _ok "chezmoi config exists (machine-local; init skipped)"
+    else
+      chezmoi init --source "$DOTFILES_DIR" --dry-run --verbose
+    fi
     chezmoi apply --source "$DOTFILES_DIR" --dry-run --verbose
   else
     _info "chezmoi is not installed; packages or all mode installs it through Brewfile"

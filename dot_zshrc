@@ -46,6 +46,12 @@ case ":$PATH:" in
   *) [ -d "$HOME/.grok/bin" ] && export PATH="$HOME/.grok/bin:$PATH" ;;
 esac
 
+# Kilo CLI is optional and machine-local; expose it only where installed.
+case ":$PATH:" in
+  *":$HOME/.kilo/bin:"*) ;;
+  *) [ -d "$HOME/.kilo/bin" ] && export PATH="$HOME/.kilo/bin:$PATH" ;;
+esac
+
 # Keep Homebrew ahead of macOS defaults for interactive shells.
 # mise shims は Homebrew より前に置く。ここが Homebrew 単独だと、profile.sh が先に載せた
 # mise shims をこの再並べ替えが追い越し、対話シェルの node/python3 が Homebrew 実体

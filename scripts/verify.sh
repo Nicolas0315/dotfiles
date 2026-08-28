@@ -33,10 +33,20 @@ for f in \
   "$repo_dir/dot_config/mise/config.toml" \
   "$repo_dir/symlink_dot_tmux.conf.tmpl" \
   "$repo_dir/docs/new-mac.md" \
-  "$repo_dir/brew/Brewfile"; do
+  "$repo_dir/brew/Brewfile" \
+  "$repo_dir/scripts/sync-editor-extensions.sh" \
+  "$repo_dir/tools/editor-extensions.txt" \
+  "$repo_dir/windows/sync-editor-extensions.ps1"; do
   [ -f "$f" ] || { printf 'missing source file: %s\n' "$f" >&2; exit 1; }
 done
 printf 'ok: source layout\n\n'
+
+printf '## editor extension allowlist\n'
+expected_extensions="$repo_dir/tools/editor-extensions.txt"
+actual_extensions="$(sed -n 's/^vscode "\([^"]*\)"$/\1/p' "$repo_dir/brew/Brewfile")"
+diff -u "$expected_extensions" <(printf '%s\n' "$actual_extensions")
+[ "$(wc -l < "$expected_extensions" | tr -d ' ')" -eq 2 ]
+printf 'ok: Brewfile matches the two-extension fleet allowlist\n\n'
 
 printf '## no hardcoded home paths\n'
 if git -C "$repo_dir" grep -n '/Users/[a-z0-9]' -- ':!docs/**' ':!research/**' >&2; then
@@ -49,6 +59,7 @@ printf '## new Mac entrypoint\n'
 grep -q 'bootstrap.sh --check' "$repo_dir/docs/new-mac.md"
 grep -q 'scripts/verify.sh' "$repo_dir/docs/new-mac.md"
 grep -q 'scripts/bootstrap.sh' "$repo_dir/docs/new-mac.md"
+grep -q 'chezmoi config exists (machine-local; init skipped)' "$repo_dir/bootstrap.sh"
 printf 'ok: new Mac runbook has preflight, verification, and agent-context setup\n\n'
 
 "$repo_dir/scripts/secret-scan.sh"
