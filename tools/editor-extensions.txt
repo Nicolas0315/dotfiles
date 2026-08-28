@@ -1,0 +1,2 @@
+ms-ceintl.vscode-language-pack-ja
+shd101wyy.markdown-preview-enhanced

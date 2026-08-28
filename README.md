@@ -65,6 +65,16 @@ Repo-only assets (never applied to `$HOME`, listed in `.chezmoiignore`):
 - `windows/` — Windows parity kit (PowerShell profile, setup, dev-doctor)
 - `scripts/`, `docs/`, `research/`
 
+## リポジトリ管理（ghq）
+
+- 既存の`~/work`配下は固定パス・worktree・symlinkを守るため移動しません。
+- 今後の新規cloneは`ghq get owner/repo`を使い、既定の`~/ghq/<host>/<owner>/<repo>`へ置きます。
+- `ghq list -p`はghq管理分だけを対象にします。`~/work`を追加rootにすると現行Macで列挙が約10秒かかったため採用しません。
+- `ghq migrate`, `ghq rm`, `ghq get -u`は移動・削除・更新を伴うため自動実行しません。
+- MacはBrewfile、Windowsは`tools/matrix.tsv`の公式winget packageで導入します。
+
+公式仕様: [x-motemen/ghq](https://github.com/x-motemen/ghq#readme)
+
 ## Daily Workflow
 
 ```sh
@@ -82,7 +92,21 @@ Verification:
 ./scripts/validate.sh        # local Mac gate: live commands, startup time, Ghostty config
 ./scripts/brew-check.sh      # is the Brewfile satisfied? (read-only, --no-upgrade)
 ./scripts/secret-scan.sh     # standalone secret scan
+./scripts/sync-editor-extensions.sh --check  # default local VS Code/Cursor store
 ```
+
+Editor extensions are intentionally limited to the Japanese language pack and
+Markdown Preview Enhanced. Apply the shared allowlist explicitly with
+`scripts/sync-editor-extensions.sh --apply` on macOS or
+`windows/sync-editor-extensions.ps1 -Apply` on Windows. Claude Code and Codex
+IDE extensions remain opt-in because their CLI/desktop clients work without
+editor extensions.
+
+This only manages each editor's default local extension store. Independent
+profiles and Remote SSH/WSL/container extension stores stay separate, and
+Settings Sync is not changed. Before pruning, the script saves an `id@version`
+manifest under `~/.local/state/editor-extension-backups`; reinstall those entries
+to restore a previous set.
 
 ## Secret Handling
 

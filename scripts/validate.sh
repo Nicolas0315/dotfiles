@@ -23,7 +23,7 @@ fi
 printf 'ok: chezmoi status (empty output above = source matches live)\n\n'
 
 printf '## live command resolution\n'
-zsh -lic 'which -a node npm codex claude gemini; codex --version; claude --version; gemini --version' 2>&1 \
+zsh -lic 'which -a node npm codex claude agy; codex --version; claude --version; agy --version' 2>&1 \
   | sed '/^Restored session:/d;/^Saving session/d;/^\.\.\./d'
 printf '\n'
 

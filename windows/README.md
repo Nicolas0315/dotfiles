@@ -14,6 +14,8 @@ to the same tool/AI-CLI/secret state as a Mac, without fleet-style sync.
 - `profile.ps1` — shell init parallel of `config/profile.sh` (PATH, aliases,
   zoxide/atuin/direnv/starship, host-local secrets). Dot-source from `$PROFILE`.
 - `dev-doctor.ps1` — read-only health check parallel of `katala-tooling/bin/dev-doctor`.
+- `sync-editor-extensions.ps1` — checks the shared two-extension allowlist;
+  `-Apply` backs up metadata, converges VS Code/Cursor, and verifies the result.
 
 ## Bring-up (Windows, PowerShell 7+)
 
@@ -41,6 +43,9 @@ op inject -i .env.tmpl -o .env
 pwsh -File windows\dev-doctor.ps1
 ```
 
+`ghq`は`winget:x-motemen.ghq`から導入し、新規cloneだけを既定の
+`$HOME\ghq\<host>\<owner>\<repo>`へ置きます。既存`$HOME\work`は移動しません。
+
 ## Notes
 
 - `tools/matrix.tsv` is the single source of truth shared with macOS. Update it
@@ -48,3 +53,6 @@ pwsh -File windows\dev-doctor.ps1
 - `wsl`-tagged tools (tmux, semgrep) install on the Linux/WSL side.
 - Secrets follow the same rule as macOS: only `op://` references are committed;
   real values stay in 1Password and are materialized locally.
+- Editor pruning covers the default local store only. Profiles, Remote SSH/WSL,
+  containers, and Settings Sync remain separate; restore from the newest
+  `extensions.txt` under `.local\state\editor-extension-backups`.
