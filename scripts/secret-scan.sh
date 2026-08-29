@@ -16,7 +16,7 @@ findings="$(
 
 # 1Password/Keychain lookup と、値が変数参照($始まり)の代入は許容する。
 # 不変条件: 右辺が変数参照なら平文の秘密値はその行に存在しえない。生のリテラル値のみ警告。
-allow_re='op item get .*--reveal|security (find|add)-generic-password|=[[:space:]]*"?\$\{?[A-Za-z_]'
+allow_re='op item get .*--reveal|security (find|add)-generic-password|=[[:space:]]*"?\$\{?[A-Za-z_]|[A-Za-z_][A-Za-z0-9_]*=op://'
 allowed="$(
   printf '%s\n' "$findings" | rg "$allow_re" || true
 )"

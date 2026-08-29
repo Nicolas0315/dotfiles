@@ -1,0 +1,7 @@
+model_provider = "claude_oauth"
+model = "claude-haiku"
+
+[model_providers.claude_oauth]
+name = "Claude OAuth via LiteLLM localhost"
+base_url = "http://127.0.0.1:4001/v1"
+wire_api = "responses"

@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+port=4001
+config="${XDG_CONFIG_HOME:-$HOME/.config}/litellm/claude-oauth.yaml"
+codex_home="${XDG_DATA_HOME:-$HOME/.local/share}/codex-claude"
+
+for command in codex curl lsof op-agent uv; do
+  command -v "$command" >/dev/null || { echo "codex-claude: missing $command" >&2; exit 127; }
+done
+[[ -f "$config" && -f "$codex_home/config.toml" ]] || { echo "codex-claude: run chezmoi apply first" >&2; exit 2; }
+if lsof -nP -iTCP:"$port" -sTCP:LISTEN >/dev/null 2>&1; then
+  echo "codex-claude: localhost:$port is already in use" >&2
+  exit 2
+fi
+
+OP_AGENT_TIMEOUT=86400 op-agent run \
+  --env-file=<(printf '%s\n' 'ANTHROPIC_API_KEY=op://Katala-Agents/Claude Code OAuth Token/credential') \
+  -- uv run --with 'litellm[proxy]==1.98.0' litellm \
+  --config "$config" --host 127.0.0.1 --port "$port" >/dev/null 2>&1 &
+proxy_pid=$!
+cleanup() {
+  kill "$proxy_pid" 2>/dev/null || true
+  wait "$proxy_pid" 2>/dev/null || true
+}
+trap cleanup EXIT INT TERM
+
+for _ in {1..60}; do
+  curl --fail --silent "http://127.0.0.1:$port/health/liveliness" >/dev/null 2>&1 && break
+  kill -0 "$proxy_pid" 2>/dev/null || { echo "codex-claude: LiteLLM failed to start" >&2; exit 1; }
+  sleep 0.25
+done
+curl --fail --silent "http://127.0.0.1:$port/health/liveliness" >/dev/null 2>&1 || {
+  echo "codex-claude: LiteLLM startup timed out" >&2
+  exit 1
+}
+
+CODEX_HOME="$codex_home" codex "$@"
