@@ -1,10 +1,14 @@
 {
-    "global": { "show_in_menu_bar": false },
+    "global": {
+        "show_in_menu_bar": false
+    },
     "profiles": [
         {
             "name": "Default profile",
             "selected": true,
-            "virtual_hid_keyboard": { "keyboard_type_v2": "jis" },
+            "virtual_hid_keyboard": {
+                "keyboard_type_v2": "jis"
+            },
             "devices": [
                 {
                     "identifiers": {
@@ -13,13 +17,155 @@
                         "product_id": 315
                     },
                     "simple_modifications": [
-                        { "from": { "key_code": "left_command" },  "to": [ { "key_code": "left_option" } ] },
-                        { "from": { "key_code": "left_option" },   "to": [ { "key_code": "left_command" } ] },
-                        { "from": { "key_code": "right_command" }, "to": [ { "key_code": "right_option" } ] },
-                        { "from": { "key_code": "right_option" },  "to": [ { "key_code": "right_command" } ] },
-                        { "from": { "key_code": "application" },   "to": [ { "key_code": "right_command" } ] },
-                        { "from": { "key_code": "japanese_pc_nfer" }, "to": [ { "key_code": "japanese_eisuu" } ] },
-                        { "from": { "key_code": "japanese_pc_xfer" }, "to": [ { "key_code": "japanese_kana" } ] }
+                        {
+                            "from": {
+                                "key_code": "left_command"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "left_option"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "left_option"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "left_command"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "right_command"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "right_option"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "right_option"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "right_command"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "application"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "right_command"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "japanese_pc_nfer"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "japanese_eisuu"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "japanese_pc_xfer"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "japanese_kana"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "identifiers": {
+                        "is_keyboard": true,
+                        "vendor_id": 1452,
+                        "product_id": 591
+                    },
+                    "simple_modifications": [
+                        {
+                            "from": {
+                                "key_code": "left_command"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "left_option"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "left_option"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "left_command"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "right_command"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "right_option"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "right_option"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "right_command"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "application"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "right_command"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "japanese_pc_nfer"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "japanese_eisuu"
+                                }
+                            ]
+                        },
+                        {
+                            "from": {
+                                "key_code": "japanese_pc_xfer"
+                            },
+                            "to": [
+                                {
+                                    "key_code": "japanese_kana"
+                                }
+                            ]
+                        }
                     ]
                 }
             ]
