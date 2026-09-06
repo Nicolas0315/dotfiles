@@ -41,7 +41,11 @@ _section "Package Manager"
 if command -v brew >/dev/null 2>&1; then
   _ok "Homebrew $(brew --version | head -1 | sed 's/Homebrew //')"
   brew_out="$(brew doctor 2>&1)"
-  if echo "$brew_out" | grep -q "Your system is ready to brew"; then
+  brew_exit=$?
+  if [ "$brew_exit" -ne 0 ]; then
+    _fail "brew doctor failed (exit $brew_exit)"
+    _rec "brew doctor"
+  elif echo "$brew_out" | grep -q "Your system is ready to brew"; then
     _ok "brew doctor"
   else
     warn_cnt="$(echo "$brew_out" | grep -c "Warning:" 2>/dev/null || echo "?")"
@@ -49,10 +53,13 @@ if command -v brew >/dev/null 2>&1; then
     _rec "brew doctor"
   fi
   # --no-upgrade: バージョン古いものは「充足」とみなし、純粋な未インストールのみを検出
-  bundle_out="$(brew bundle check --file="$DOTFILES_DIR/brew/Brewfile" --no-upgrade --verbose 2>&1 || true)"
+  bundle_out="$(brew bundle check --file="$DOTFILES_DIR/brew/Brewfile" --no-upgrade --verbose 2>&1)"
+  bundle_exit=$?
   missing_count="$(echo "$bundle_out" | grep -c "needs to be installed" || true)"
-  if [ "${missing_count:-0}" -eq 0 ]; then
+  if [ "$bundle_exit" -eq 0 ]; then
     _ok "Brewfile 充足"
+  elif [ "${missing_count:-0}" -eq 0 ]; then
+    _fail "Brewfile check failed (exit $bundle_exit; installation state unknown)"
   else
     _warn "Brewfile 充足" "${missing_count} パッケージ未インストール"
     _rec "brew bundle --file=$DOTFILES_DIR/brew/Brewfile"
@@ -66,7 +73,10 @@ _section "ランタイム (mise)"
 if command -v mise >/dev/null 2>&1; then
   _ok "mise $(mise --version 2>/dev/null | head -1)"
   mise_doc="$(mise doctor 2>&1)"
-  if echo "$mise_doc" | grep -qiE "^error|^warning.*no"; then
+  mise_exit=$?
+  if [ "$mise_exit" -ne 0 ]; then
+    _fail "mise doctor failed (exit $mise_exit)"
+  elif echo "$mise_doc" | grep -qiE "^error|^warning.*no"; then
     _warn "mise doctor" "issues detected — run: mise doctor"
     _rec "mise doctor"
   else
@@ -81,23 +91,29 @@ _section "dotfiles (chezmoi)"
 if command -v chezmoi >/dev/null 2>&1; then
   _ok "chezmoi $(chezmoi --version 2>/dev/null | head -1 | awk '{print $3}')"
   chezmoi_src="$(chezmoi source-path 2>/dev/null)"
-  expected_src="$HOME/work/dotfiles"
+  expected_src="$DOTFILES_DIR"
   if [ "$chezmoi_src" = "$expected_src" ]; then
     _ok "chezmoi source-path ($chezmoi_src)"
   else
     _fail "chezmoi source-path (期待: $expected_src, 実際: ${chezmoi_src:-未設定})"
     _rec "chezmoi init --source $expected_src"
   fi
-  diff_out="$(chezmoi diff 2>/dev/null)"
-  if [ -z "$diff_out" ]; then
-    _ok "chezmoi diff (no-op)"
+  diff_out="$(chezmoi status --exclude=scripts,encrypted 2>/dev/null)"
+  diff_exit=$?
+  if [ "$diff_exit" -ne 0 ]; then
+    _fail "chezmoi status failed (exit $diff_exit; drift unknown)"
+  elif [ -z "$diff_out" ]; then
+    _ok "chezmoi status (no-op; scripts/encrypted excluded)"
   else
     _warn "chezmoi diff" "未適用の変更あり"
     _rec "chezmoi apply"
     [ "$VERBOSE" = "1" ] && printf '%s\n' "$diff_out"
   fi
   chezmoi_doc="$(chezmoi doctor 2>&1)"
-  if echo "$chezmoi_doc" | grep -qi "^error"; then
+  chezmoi_exit=$?
+  if [ "$chezmoi_exit" -ne 0 ]; then
+    _fail "chezmoi doctor failed (exit $chezmoi_exit)"
+  elif echo "$chezmoi_doc" | grep -qi "^error"; then
     _warn "chezmoi doctor" "$(echo "$chezmoi_doc" | grep -i "^error" | head -1)"
     _rec "chezmoi doctor"
   else

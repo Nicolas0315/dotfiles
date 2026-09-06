@@ -4,13 +4,15 @@ set -euo pipefail
 repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 printf '## script syntax\n'
-bash -n "$repo_dir"/scripts/*.sh "$repo_dir/bootstrap.sh"
+for script in "$repo_dir"/scripts/*.sh "$repo_dir/bootstrap.sh"; do
+  bash -n "$script"
+done
 printf 'ok: bash scripts\n\n'
 
 printf '## zsh syntax\n'
-zsh -n \
-  "$repo_dir/dot_zshrc" \
-  "$repo_dir/dot_zprofile"
+for script in "$repo_dir/dot_zshrc" "$repo_dir/dot_zprofile"; do
+  zsh -n "$script"
+done
 printf 'ok: zsh fragments\n\n'
 
 printf '## chezmoi state\n'
