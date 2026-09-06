@@ -29,40 +29,41 @@ function Invoke-DevProbe {
     $tokens = $parts | ForEach-Object { "'" + $_.Replace("'", "''") + "'" }
     $payload = '$ErrorActionPreference="Stop"; $ProgressPreference="SilentlyContinue"; $PSNativeCommandUseErrorActionPreference=$false; [Console]::OutputEncoding=[Text.UTF8Encoding]::new($false); try { $global:LASTEXITCODE=0; $output=@(& COMMAND 2>$null); $ok=$?; $code=$LASTEXITCODE; if(-not $ok -and $code -eq 0){$code=1}; $version=if($code -eq 0){($output | Select-Object -First 1 | Out-String).Trim()}else{""}; @{ExitCode=$code; Version=$version} | ConvertTo-Json -Compress } catch { @{ExitCode=1; Version=""} | ConvertTo-Json -Compress }'
     $payload = $payload.Replace('COMMAND', ($tokens -join ' '))
+    # Keep the owning shell alive until the caller terminates its entire tree.
+    $payload += '; [Console]::In.ReadLine() | Out-Null'
     $start = [Diagnostics.ProcessStartInfo]::new()
     $start.FileName = Join-Path $PSHOME 'pwsh.exe'
     $start.Arguments = '-NoLogo -NoProfile -NonInteractive -EncodedCommand ' + [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($payload))
     $start.UseShellExecute=$false
     $start.CreateNoWindow=$true
+    $start.RedirectStandardInput=$true
     $start.RedirectStandardOutput=$true
     $start.RedirectStandardError=$true
     $start.StandardOutputEncoding=[Text.Encoding]::UTF8
     $process=[Diagnostics.Process]::new()
     $process.StartInfo=$start
     $result=[pscustomobject]@{Status='failed'; Version=''; ExitCode=$null; Path=$command.Source}
-    $watch=[Diagnostics.Stopwatch]::StartNew()
     try {
         [void]$process.Start()
-        $stdout=$process.StandardOutput.ReadToEndAsync()
+        $stdout=$process.StandardOutput.ReadLineAsync()
         $stderr=$process.StandardError.ReadToEndAsync()
-        if (-not $process.WaitForExit($TimeoutSeconds * 1000)) {
-            $process.Kill($true)
-            $process.WaitForExit()
+        if (-not $stdout.Wait($TimeoutSeconds * 1000)) {
             $result.Status='timed_out'
         } else {
-            $remaining=[Math]::Max(1, $TimeoutSeconds * 1000 - [int]$watch.ElapsedMilliseconds)
-            if (-not $stdout.Wait($remaining)) {
-                # A descendant can keep the inherited pipe open after its shell exits.
-                $result.Status='timed_out'
-                return $result
-            }
             $data=$stdout.GetAwaiter().GetResult() | ConvertFrom-Json -ErrorAction Stop
             $result.ExitCode=$data.ExitCode
-            if ($process.ExitCode -eq 0 -and $data.ExitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($data.Version)) {
+            if ($data.ExitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($data.Version)) {
                 $result.Status='ok'
                 $result.Version=$data.Version
             }
         }
-    } catch { $result.Status='failed' } finally { $process.Dispose() }
+    } catch { $result.Status='failed' } finally {
+        # The child shell waits on stdin after reporting JSON, preserving ancestry
+        # even when the version command leaves descendants with open pipe handles.
+        try {
+            if (-not $process.HasExited) { $process.Kill($true); $process.WaitForExit() }
+        } catch { $result.Status='failed'; $result.Version='' }
+        $process.Dispose()
+    }
     $result
 }

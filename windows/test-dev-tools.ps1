@@ -5,6 +5,7 @@ $testRoot=Join-Path ([IO.Path]::GetTempPath()) ('dotfiles-test-'+[guid]::NewGuid
 New-Item -ItemType Directory $testRoot | Out-Null
 $oldPath=$env:PATH
 $oldGitConfig=$env:GIT_CONFIG_GLOBAL
+$oldChildFile=$env:DOTFILES_TEST_CHILD_FILE
 function Assert-Equal($actual,$expected,$label) {
     if($actual -ne $expected){throw "$label expected=$expected actual=$actual"}
     Write-Output "PASS $label"
@@ -23,6 +24,11 @@ try {
     Assert-Equal (Invoke-DevProbe 'fixture-empty --version').Status failed 'empty stdout not success'
     Assert-Equal (Invoke-DevProbe 'fixture-absent-6138 --version').Status missing 'absent command'
     Assert-Equal (Invoke-DevProbe 'fixture-wait.ps1 --version' 1).Status timed_out 'timeout'
+    $env:DOTFILES_TEST_CHILD_FILE=Join-Path $testRoot 'child-pid.txt'
+    Set-Content (Join-Path $testRoot 'fixture-child.ps1') '$child=Start-Process -FilePath (Join-Path $PSHOME "pwsh.exe") -ArgumentList "-NoProfile -Command Start-Sleep -Seconds 30" -WindowStyle Hidden -PassThru; Set-Content $env:DOTFILES_TEST_CHILD_FILE $child.Id; Write-Output "fixture 1.0"' -Encoding utf8
+    Assert-Equal (Invoke-DevProbe 'fixture-child.ps1 --version').Status ok 'version with descendant'
+    $childId=[int](Get-Content $env:DOTFILES_TEST_CHILD_FILE)
+    Assert-Equal ([bool](Get-Process -Id $childId -ErrorAction SilentlyContinue)) $false 'descendant stopped after successful probe'
     $matrix=Join-Path $testRoot 'matrix.tsv'
     Set-Content $matrix "fixture`treq`tfixture`twinget:Fixture.Tool`tfixture-fail --version"
     $output=@(& (Join-Path $PSHOME 'pwsh.exe') -NoProfile -File (Join-Path $PSScriptRoot 'dev-doctor.ps1') -MatrixPath $matrix -Json)
@@ -58,6 +64,7 @@ try {
 } finally {
     $env:PATH=$oldPath
     $env:GIT_CONFIG_GLOBAL=$oldGitConfig
+    $env:DOTFILES_TEST_CHILD_FILE=$oldChildFile
     $resolved=[IO.Path]::GetFullPath($testRoot)
     $tempBase=[IO.Path]::GetFullPath([IO.Path]::GetTempPath())
     if($resolved.StartsWith($tempBase,[StringComparison]::OrdinalIgnoreCase) -and (Split-Path $resolved -Leaf).StartsWith('dotfiles-test-')) {
