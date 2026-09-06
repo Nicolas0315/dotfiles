@@ -3,9 +3,9 @@
 Windows-side parallel of the macOS dotfiles. Goal: a machine can be brought up
 to the same tool/AI-CLI/secret state as a Mac, without fleet-style sync.
 
-> **Status: authored on macOS, not yet verified on a Windows host.**
-> Review dry-run output before applying. Validate on a real Windows node and
-> record results in `~/work/docs/dev-env-portability/`.
+The doctor and setup failure paths have native Windows regression tests.
+Profile initialization and successful package installation still need per-host
+verification. See [the Mac/Windows contract](../docs/cross-platform.md).
 
 ## Files
 
@@ -14,6 +14,9 @@ to the same tool/AI-CLI/secret state as a Mac, without fleet-style sync.
 - `profile.ps1` — shell init parallel of `config/profile.sh` (PATH, aliases,
   zoxide/atuin/direnv/starship, host-local secrets). Dot-source from `$PROFILE`.
 - `dev-doctor.ps1` — read-only health check parallel of `katala-tooling/bin/dev-doctor`.
+  Requires PowerShell 7+. `-Json` emits version, executable path, status and exit
+  code per tool; `-TimeoutSeconds` defaults to 15. It never signs in or starts WSL.
+  Exit 0 covers required/AI version probes only; inspect recommended failures too.
 - `sync-editor-extensions.ps1` — checks the shared two-extension allowlist;
   `-Apply` backs up metadata, converges VS Code/Cursor, and verifies the result.
 
@@ -33,7 +36,7 @@ Add-Content $PROFILE '. "$env:USERPROFILE\work\dotfiles\windows\profile.ps1"'
 # 4. AI CLIs auth
 claude   # login flow
 codex auth login
-gemini   # login flow
+agy      # login flow (Google seat)
 
 # 5. secrets: op signin, then per-repo
 op signin

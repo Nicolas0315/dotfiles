@@ -14,13 +14,15 @@ done
 printf '\n'
 
 printf '## script syntax\n'
-bash -n "$repo_dir"/scripts/*.sh "$repo_dir/bootstrap.sh"
+for script in "$repo_dir"/scripts/*.sh "$repo_dir/bootstrap.sh"; do
+  bash -n "$script"
+done
 printf 'ok: bash scripts\n\n'
 
 printf '## zsh syntax\n'
-zsh -n \
-  "$repo_dir/dot_zshrc" \
-  "$repo_dir/dot_zprofile"
+for script in "$repo_dir/dot_zshrc" "$repo_dir/dot_zprofile"; do
+  zsh -n "$script"
+done
 printf 'ok: zsh fragments\n\n'
 
 printf '## chezmoi source layout\n'
@@ -63,3 +65,4 @@ grep -q 'chezmoi config exists (machine-local; init skipped)' "$repo_dir/bootstr
 printf 'ok: new Mac runbook has preflight, verification, and agent-context setup\n\n'
 
 "$repo_dir/scripts/secret-scan.sh"
+bash "$repo_dir/scripts/test-doctor.sh"

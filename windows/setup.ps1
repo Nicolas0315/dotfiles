@@ -1,3 +1,4 @@
+#requires -Version 7.0
 <#
 .SYNOPSIS
   setup.ps1 - install the cross-platform dev toolset on Windows from tools/matrix.tsv.
@@ -23,8 +24,11 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+$PSNativeCommandUseErrorActionPreference = $false
+. (Join-Path $PSScriptRoot 'dev-tools.ps1')
 
-if (-not (Test-Path $MatrixPath)) { Write-Error "matrix not found: $MatrixPath"; exit 2 }
+try { $matrix = @(Read-DevMatrix $MatrixPath) }
+catch { Write-Error 'Tool matrix missing or invalid'; exit 2 }
 
 function Test-OnPath { param([string]$CommandLine)
   $cmd = ($CommandLine -split '\s+')[0]
@@ -43,10 +47,8 @@ function Invoke-Install { param([string]$WinPkg)
 }
 
 $plan = @()
-Get-Content $MatrixPath | Where-Object { $_ -and -not $_.StartsWith('#') } | ForEach-Object {
-  $f = $_ -split "`t"
-  if ($f.Count -lt 5) { return }
-  $name = $f[0]; $grp = $f[1]; $winpkg = $f[3]; $check = $f[4]
+$matrix | ForEach-Object {
+  $name = $_.Name; $grp = $_.Group; $winpkg = $_.Package; $check = $_.Check
   if ($Group -ne 'all' -and $grp -ne $Group) { return }
   if (Test-OnPath $check) { Write-Output "skip  $name ($grp) - already on PATH"; return }
 
@@ -54,7 +56,7 @@ Get-Content $MatrixPath | Where-Object { $_ -and -not $_.StartsWith('#') } | For
   if ($null -eq $spec) { Write-Output "wsl   $name ($grp) - Linux/WSL side only ($winpkg)"; return }
 
   $exe = $spec[0]; $cmdArgs = $spec[1]
-  $plan += [pscustomobject]@{ Name = $name; Group = $grp; Exe = $exe; Args = $cmdArgs }
+  $plan += [pscustomobject]@{ Name = $name; Group = $grp; Exe = $exe; Args = $cmdArgs; Check = $check }
   Write-Output "plan  $name ($grp) -> $exe $($cmdArgs -join ' ')"
 }
 
@@ -64,19 +66,38 @@ if (-not $Apply) {
   exit 0
 }
 
+$failed = 0
 foreach ($p in $plan) {
   if (-not (Get-Command $p.Exe -ErrorAction SilentlyContinue)) {
     Write-Warning "$($p.Exe) not available - cannot install $($p.Name). Install the package manager first."
+    $failed++
     continue
   }
   Write-Output "==> installing $($p.Name): $($p.Exe) $($p.Args -join ' ')"
   & $p.Exe @($p.Args)
+  $installExit = $LASTEXITCODE
+  if ($installExit -ne 0) {
+    Write-Warning "$($p.Name): install failed (exit $installExit)"
+    $failed++
+    continue
+  }
+  $probe = Invoke-DevProbe $p.Check
+  if ($probe.Status -ne 'ok') {
+    Write-Warning "$($p.Name): install returned zero but verification is $($probe.Status). A fresh shell may be required."
+    $failed++
+  }
 }
 
 # ghq uses Git's global config. Keep the default root (~/ghq); existing ~/work
 # repositories are intentionally not migrated or added as a scan root.
 if (Get-Command git -ErrorAction SilentlyContinue) {
   git config --global ghq.user Nicolas0315
+  if ($LASTEXITCODE -ne 0) { $failed++ }
   git config --global ghq.defaultHost github.com
+  if ($LASTEXITCODE -ne 0) { $failed++ }
+}
+if ($failed -gt 0) {
+  Write-Error "setup.ps1: $failed failed or unverified operation(s). Run dev-doctor.ps1 in a fresh shell."
+  exit 1
 }
 Write-Output "setup.ps1: done. Run dev-doctor.ps1 to verify."

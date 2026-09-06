@@ -2,6 +2,8 @@
 
 macOS dotfiles managed with [chezmoi](https://www.chezmoi.io/), plus a full Homebrew/mas/VS Code/uv/npm tool inventory and a resumable bootstrap for setting up a new Mac.
 
+Mac / Windowsの共通化方針と検証範囲は[開発環境の契約](docs/cross-platform.md)を参照してください。
+
 ## New Mac Setup
 
 Canonical checklist: [`docs/new-mac.md`](docs/new-mac.md). Run the read-only
