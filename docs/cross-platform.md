@@ -20,7 +20,7 @@
 - exit 0は必須・AI CLIのバージョン実行成功だけを意味します。推奨ツール、WSL、認証、MCP、実プロンプトは別です。
 - Mac: `scripts/doctor.sh`。Homebrew/mise/chezmoiの非ゼロ終了を空出力の成功に変換しません。chezmoiの状態確認はscripts/encryptedを除外し、秘密を含みうる差分本文を取得しません。
 - `scripts/verify.sh`は全bash/zshファイルを個別に構文検証し、Mac診断のオフライン回帰テストを実行します。Windows CIはPowerShell構文と実プロセスを使う回帰テストを実行します。
-- Windows setupはdry-runが既定です。インストール失敗、管理ツール欠落、インストール後の実行確認失敗を非ゼロ終了にします。新しいPATHが必要なら新規シェルで再検証します。
+- Windows setupはdry-runが既定です。インストール失敗、管理ツール欠落、インストール後の実行確認失敗を非ゼロ終了にします。直後のprobeは継承PATHを使い、レジストリのPATH再読込やログイン検証を行いません。PATH追加が必要な導入は未検証として非ゼロ終了し、操作者が新しく開いた端末でdoctorを再実行して確認します。
 
 ## 適用と復元
 

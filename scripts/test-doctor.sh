@@ -8,7 +8,7 @@ cat > "$fixture_dir/probe" <<'SH'
 #!/usr/bin/env bash
 case "$(basename "$0"):$*" in
   'brew:--version') echo 'Homebrew fixture' ;;
-  'brew:doctor') echo 'Your system is ready to brew' ;;
+  'brew:doctor') echo 'Your system is ready to brew'; exit 76 ;;
   brew:bundle*) exit 72 ;;
   'mise:--version') echo 'mise fixture' ;;
   'mise:doctor') exit 73 ;;
@@ -30,6 +30,7 @@ result=$?
 set -e
 [ "$result" -ne 0 ] || { echo 'doctor incorrectly passed'; exit 1; }
 for expected in \
+  'brew doctor failed (exit 76' \
   'Brewfile check failed (exit 72' \
   'mise doctor failed (exit 73' \
   'chezmoi status failed (exit 74' \

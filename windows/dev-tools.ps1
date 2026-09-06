@@ -40,6 +40,7 @@ function Invoke-DevProbe {
     $process=[Diagnostics.Process]::new()
     $process.StartInfo=$start
     $result=[pscustomobject]@{Status='failed'; Version=''; ExitCode=$null; Path=$command.Source}
+    $watch=[Diagnostics.Stopwatch]::StartNew()
     try {
         [void]$process.Start()
         $stdout=$process.StandardOutput.ReadToEndAsync()
@@ -49,6 +50,12 @@ function Invoke-DevProbe {
             $process.WaitForExit()
             $result.Status='timed_out'
         } else {
+            $remaining=[Math]::Max(1, $TimeoutSeconds * 1000 - [int]$watch.ElapsedMilliseconds)
+            if (-not $stdout.Wait($remaining)) {
+                # A descendant can keep the inherited pipe open after its shell exits.
+                $result.Status='timed_out'
+                return $result
+            }
             $data=$stdout.GetAwaiter().GetResult() | ConvertFrom-Json -ErrorAction Stop
             $result.ExitCode=$data.ExitCode
             if ($process.ExitCode -eq 0 -and $data.ExitCode -eq 0 -and -not [string]::IsNullOrWhiteSpace($data.Version)) {

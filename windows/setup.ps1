@@ -10,8 +10,8 @@
   Dry-run by default: it PRINTS the install commands and changes nothing.
   Pass -Apply to actually install.
 
-  STATUS: not yet verified on a Windows host (authored from macOS). Review the
-  printed dry-run plan before running -Apply. See dev-env-portability assessment.
+  Failure and dry-run paths have native Windows regression tests. Successful
+  package installation remains a per-host verification step.
 .EXAMPLE
   pwsh -File setup.ps1            # dry-run: show the plan
   pwsh -File setup.ps1 -Apply     # install missing tools
@@ -28,7 +28,7 @@ $PSNativeCommandUseErrorActionPreference = $false
 . (Join-Path $PSScriptRoot 'dev-tools.ps1')
 
 try { $matrix = @(Read-DevMatrix $MatrixPath) }
-catch { Write-Error 'Tool matrix missing or invalid'; exit 2 }
+catch { Write-Error 'Tool matrix missing or invalid' -ErrorAction Continue; exit 2 }
 
 function Test-OnPath { param([string]$CommandLine)
   $cmd = ($CommandLine -split '\s+')[0]
@@ -90,6 +90,10 @@ foreach ($p in $plan) {
 
 # ghq uses Git's global config. Keep the default root (~/ghq); existing ~/work
 # repositories are intentionally not migrated or added as a scan root.
+if ($failed -gt 0) {
+  Write-Error "setup.ps1: $failed failed or unverified operation(s). Run dev-doctor.ps1 in a fresh shell." -ErrorAction Continue
+  exit 1
+}
 if (Get-Command git -ErrorAction SilentlyContinue) {
   git config --global ghq.user Nicolas0315
   if ($LASTEXITCODE -ne 0) { $failed++ }

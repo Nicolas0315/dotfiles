@@ -41,7 +41,11 @@ _section "Package Manager"
 if command -v brew >/dev/null 2>&1; then
   _ok "Homebrew $(brew --version | head -1 | sed 's/Homebrew //')"
   brew_out="$(brew doctor 2>&1)"
-  if echo "$brew_out" | grep -q "Your system is ready to brew"; then
+  brew_exit=$?
+  if [ "$brew_exit" -ne 0 ]; then
+    _fail "brew doctor failed (exit $brew_exit)"
+    _rec "brew doctor"
+  elif echo "$brew_out" | grep -q "Your system is ready to brew"; then
     _ok "brew doctor"
   else
     warn_cnt="$(echo "$brew_out" | grep -c "Warning:" 2>/dev/null || echo "?")"
