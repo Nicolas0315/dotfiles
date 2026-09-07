@@ -2,3 +2,5 @@
 node = "24"
 python = "3.13"
 terraform = "latest"
+"aqua:rhysd/actionlint" = "1.7.12"
+"aqua:zizmorcore/zizmor" = "1.30.0"
