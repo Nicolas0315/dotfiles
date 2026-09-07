@@ -38,3 +38,5 @@ cloudflared	rec	cloudflared	winget:Cloudflare.cloudflared	cloudflared --version
 ollama	rec	ollama	winget:Ollama.Ollama	ollama --version
 semgrep	rec	semgrep	wsl	semgrep --version
 tmux	rec	tmux	wsl	tmux -V
+actionlint	rec	actionlint	winget:rhysd.actionlint	actionlint -version
+zizmor	rec	zizmor	winget:zizmor.zizmor	zizmor --version
