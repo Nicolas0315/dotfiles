@@ -17,6 +17,9 @@ agy	ai	cask:antigravity-cli	winget:Google.AntigravityCLI	agy --version
 uv	rec	uv	winget:astral-sh.uv	uv --version
 bun	rec	bun	winget:Oven-sh.Bun	bun --version
 go	rec	go	winget:GoLang.Go	go version
+golangci-lint	rec	golangci-lint	winget:GolangCI.golangci-lint	golangci-lint --version
+goreleaser	rec	goreleaser	winget:goreleaser.goreleaser	goreleaser --version
+mkcert	rec	mkcert	winget:FiloSottile.mkcert	mkcert --version
 cargo	rec	rustup	winget:Rustlang.Rustup	cargo --version
 jq	rec	jq	winget:jqlang.jq	jq --version
 ripgrep	rec	ripgrep	winget:BurntSushi.ripgrep.MSVC	rg --version

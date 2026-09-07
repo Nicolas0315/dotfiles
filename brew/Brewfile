@@ -92,6 +92,12 @@ brew "git-lfs"
 brew "gitleaks"
 # Open source programming language to build simple/reliable/efficient software
 brew "go"
+# Go static analysis used by the Go repositories in the fleet
+brew "golangci-lint"
+# Reproducible Go release automation for repositories that publish binaries
+brew "goreleaser"
+# Local CA certificates for HTTPS development endpoints
+brew "mkcert"
 # Command-line tool for generating regular expressions
 brew "grex"
 # Like cURL, but for gRPC
