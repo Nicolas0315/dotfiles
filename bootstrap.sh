@@ -51,7 +51,13 @@ if [ "$MODE" = "check" ]; then
     else
       chezmoi init --source "$DOTFILES_DIR" --dry-run --verbose
     fi
-    chezmoi apply --source "$DOTFILES_DIR" --dry-run --verbose
+    # 読み取り専用のプリフライトに `apply --dry-run` は使えない。管理下のファイルが
+    # 手元で変わっていると chezmoi は解決方法を対話で聞き、TTY の無い文脈
+    # (CI / ssh -T / launchd / エージェント)では
+    # "could not open a new TTY" で --check ごと落ちる(--no-tty でも stdin EOF で落ちる)。
+    # 実測 2026-09-10: .config/git/config が drift していて再現した。
+    # `diff` はプロンプトを出さずに差分だけ返すので、プリフライトの意味と一致する。
+    chezmoi diff --source "$DOTFILES_DIR" || true
   else
     _info "chezmoi is not installed; packages or all mode installs it through Brewfile"
   fi
